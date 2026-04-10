@@ -11,7 +11,7 @@ import Alert from 'flarum/common/components/Alert';
 interface WidgetEditorAttrs extends ExtensionPageAttrs {}
 
 export default class WidgetEditor extends ExtensionPage<WidgetEditorAttrs> {
-  static settingKey = 'afrux-forum-widgets-core.config';
+  static settingKey = 'fof-forum-widgets-core.config';
 
   private config?: any;
   private placeholderCache: any = {};
@@ -29,21 +29,19 @@ export default class WidgetEditor extends ExtensionPage<WidgetEditorAttrs> {
     this.cleanupLayout();
   }
 
-  content(vnode: Mithril.Vnode<WidgetEditorAttrs, this>) {
+  content() {
     const settings = app.extensionData.getSettings(this.extension.id);
 
     return (
       <div className="ExtensionPage-settings">
         <div className="container">
-          {!app.data['afrux-forum-widgets-core.cache_store_writable'] ? (
-            <Alert type="error" dismissible={false}>
-              {app.translator.trans('afrux-forum-widgets-core.admin.cache_not_writable_warning')}
-            </Alert>
+          {!app.data['fof-forum-widgets-core.cache_store_writable'] ? (
+            <Alert type="error">{app.translator.trans('fof-forum-widgets-core.admin.cache_not_writable_warning')}</Alert>
           ) : null}
           <div className="Form">
             <div className="Form-group">{this.editor()}</div>
             {settings ? settings.map(this.buildSettingComponent.bind(this)) : null}
-            <div className="Form-group">{this.submitButton(vnode)}</div>
+            <div className="Form-group">{this.submitButton()}</div>
           </div>
         </div>
       </div>
@@ -52,78 +50,78 @@ export default class WidgetEditor extends ExtensionPage<WidgetEditorAttrs> {
 
   editor(): Mithril.Children {
     return (
-      <div className="Afrux-ForumWidgets-editor" oncreate={this.createEditorSections.bind(this)}>
-        <div className="Afrux-ForumWidgets-layout">
-          <div className="Afrux-ForumWidgets-layout-header Afrux-ForumWidgets-layout-concrete">
-            <div className="Afrux-ForumWidgets-layout-container Afrux-ForumWidgets-layout-headerWrapper">
-              <div className="Afrux-ForumWidgets-layout-placeholder Afrux-ForumWidgets-layout-placeholder--header" />
-              <div className="Afrux-ForumWidgets-layout-placeholderGroup">
-                <div className="Afrux-ForumWidgets-layout-placeholder Afrux-ForumWidgets-layout-placeholder--icon" />
-                <div className="Afrux-ForumWidgets-layout-placeholder Afrux-ForumWidgets-layout-placeholder--icon" />
+      <div className="FoF-ForumWidgets-editor" oncreate={this.createEditorSections.bind(this)}>
+        <div className="FoF-ForumWidgets-layout">
+          <div className="FoF-ForumWidgets-layout-header FoF-ForumWidgets-layout-concrete">
+            <div className="FoF-ForumWidgets-layout-container FoF-ForumWidgets-layout-headerWrapper">
+              <div className="FoF-ForumWidgets-layout-placeholder FoF-ForumWidgets-layout-placeholder--header" />
+              <div className="FoF-ForumWidgets-layout-placeholderGroup">
+                <div className="FoF-ForumWidgets-layout-placeholder FoF-ForumWidgets-layout-placeholder--icon" />
+                <div className="FoF-ForumWidgets-layout-placeholder FoF-ForumWidgets-layout-placeholder--icon" />
               </div>
             </div>
           </div>
-          <div className="Afrux-ForumWidgets-layout-hero Afrux-ForumWidgets-layout-concrete">
-            <div className="Afrux-ForumWidgets-layout-placeholder Afrux-ForumWidgets-layout-placeholder--header" />
-            <div className="Afrux-ForumWidgets-layout-placeholder" />
-            <div className="Afrux-ForumWidgets-layout-placeholder Afrux-ForumWidgets-layout-placeholder--long" />
+          <div className="FoF-ForumWidgets-layout-hero FoF-ForumWidgets-layout-concrete">
+            <div className="FoF-ForumWidgets-layout-placeholder FoF-ForumWidgets-layout-placeholder--header" />
+            <div className="FoF-ForumWidgets-layout-placeholder" />
+            <div className="FoF-ForumWidgets-layout-placeholder FoF-ForumWidgets-layout-placeholder--long" />
           </div>
-          <div className="Afrux-ForumWidgets-layout-contentWrapper Afrux-ForumWidgets-layout-container">
-            <div className="Afrux-ForumWidgets-layout-topSection Afrux-ForumWidgets-layout-section">
-              <ol data-section="top" className="Afrux-ForumWidgets-layout-section-items">
-                {sortWidgets(app.widgets.get('top', true)).map((widget: Widget, index: int) => this.layoutWidget(widget, index))}
+          <div className="FoF-ForumWidgets-layout-contentWrapper FoF-ForumWidgets-layout-container">
+            <div className="FoF-ForumWidgets-layout-topSection FoF-ForumWidgets-layout-section">
+              <ol data-section="top" className="FoF-ForumWidgets-layout-section-items">
+                {sortWidgets(app.widgets.get('top', true)).map((widget: Widget) => this.layoutWidget(widget))}
               </ol>
             </div>
-            <div className="Afrux-ForumWidgets-layout-sideNavContainer">
-              <div className="Afrux-ForumWidgets-layout-sideNavWrapper">
-                <div className="Afrux-ForumWidgets-layout-startTopSection Afrux-ForumWidgets-layout-section">
-                  <ol data-section="start_top" className="Afrux-ForumWidgets-layout-section-items">
-                    {sortWidgets(app.widgets.get('start_top', true)).map((widget: Widget, index: int) => this.layoutWidget(widget, index))}
+            <div className="FoF-ForumWidgets-layout-sideNavContainer">
+              <div className="FoF-ForumWidgets-layout-sideNavWrapper">
+                <div className="FoF-ForumWidgets-layout-startTopSection FoF-ForumWidgets-layout-section">
+                  <ol data-section="start_top" className="FoF-ForumWidgets-layout-section-items">
+                    {sortWidgets(app.widgets.get('start_top', true)).map((widget: Widget) => this.layoutWidget(widget))}
                   </ol>
                 </div>
-                <div className="Afrux-ForumWidgets-layout-sideNav Afrux-ForumWidgets-layout-concrete">
-                  <div className="Afrux-ForumWidgets-layout-placeholder Afrux-ForumWidgets-layout-placeholder--button">
-                    <div className="Afrux-ForumWidgets-layout-placeholder" />
+                <div className="FoF-ForumWidgets-layout-sideNav FoF-ForumWidgets-layout-concrete">
+                  <div className="FoF-ForumWidgets-layout-placeholder FoF-ForumWidgets-layout-placeholder--button">
+                    <div className="FoF-ForumWidgets-layout-placeholder" />
                   </div>
                   {this.makePlaceholders('sidenav', 8, 20, 80).map((placeholder: Mithril.Children) => (
-                    <div className="Afrux-ForumWidgets-layout-placeholderGroup">
-                      <div className="Afrux-ForumWidgets-layout-placeholder Afrux-ForumWidgets-layout-placeholder--icon" />
+                    <div className="FoF-ForumWidgets-layout-placeholderGroup">
+                      <div className="FoF-ForumWidgets-layout-placeholder FoF-ForumWidgets-layout-placeholder--icon" />
                       {placeholder}
                     </div>
                   ))}
                 </div>
-                <div className="Afrux-ForumWidgets-layout-startBottomSection Afrux-ForumWidgets-layout-section">
-                  <ol data-section="start_bottom" className="Afrux-ForumWidgets-layout-section-items">
-                    {sortWidgets(app.widgets.get('start_bottom', true)).map((widget: Widget, index: int) => this.layoutWidget(widget, index))}
+                <div className="FoF-ForumWidgets-layout-startBottomSection FoF-ForumWidgets-layout-section">
+                  <ol data-section="start_bottom" className="FoF-ForumWidgets-layout-section-items">
+                    {sortWidgets(app.widgets.get('start_bottom', true)).map((widget: Widget) => this.layoutWidget(widget))}
                   </ol>
                 </div>
               </div>
-              <div className="Afrux-ForumWidgets-layout-sideNavOffset Afrux-ForumWidgets-layout-concrete">
+              <div className="FoF-ForumWidgets-layout-sideNavOffset FoF-ForumWidgets-layout-concrete">
                 {this.makePlaceholders('sideNavOffset', 6, 20, 80).map((placeholder: Mithril.Children) => (
-                  <div className="Afrux-ForumWidgets-layout-placeholderGroup">
-                    <div className="Afrux-ForumWidgets-layout-placeholder Afrux-ForumWidgets-layout-placeholder--icon"></div>
-                    <div className="Afrux-ForumWidgets-layout-placeholderGroup-content">
+                  <div className="FoF-ForumWidgets-layout-placeholderGroup">
+                    <div className="FoF-ForumWidgets-layout-placeholder FoF-ForumWidgets-layout-placeholder--icon"></div>
+                    <div className="FoF-ForumWidgets-layout-placeholderGroup-content">
                       {placeholder}
                       {this.makePlaceholders('discussion', 1, 20, 50)}
                     </div>
                   </div>
                 ))}
               </div>
-              <div className="Afrux-ForumWidgets-layout-sideNavAlt Afrux-ForumWidgets-layout-section">
-                <ol data-section="end" className="Afrux-ForumWidgets-layout-section-items">
-                  {sortWidgets(app.widgets.get('end', true)).map((widget: Widget, index: number) => this.layoutWidget(widget, index))}
+              <div className="FoF-ForumWidgets-layout-sideNavAlt FoF-ForumWidgets-layout-section">
+                <ol data-section="end" className="FoF-ForumWidgets-layout-section-items">
+                  {sortWidgets(app.widgets.get('end', true)).map((widget: Widget) => this.layoutWidget(widget))}
                 </ol>
               </div>
             </div>
-            <div className="Afrux-ForumWidgets-layout-bottomSection Afrux-ForumWidgets-layout-section">
-              <ol data-section="bottom" className="Afrux-ForumWidgets-layout-section-items">
-                {sortWidgets(app.widgets.get('bottom', true)).map((widget: Widget, index: number) => this.layoutWidget(widget, index))}
+            <div className="FoF-ForumWidgets-layout-bottomSection FoF-ForumWidgets-layout-section">
+              <ol data-section="bottom" className="FoF-ForumWidgets-layout-section-items">
+                {sortWidgets(app.widgets.get('bottom', true)).map((widget: Widget) => this.layoutWidget(widget))}
               </ol>
             </div>
           </div>
         </div>
-        <div className="Afrux-ForumWidgets-widgets">
-          <ol data-section="store" className="Afrux-ForumWidgets-widgets-store">
+        <div className="FoF-ForumWidgets-widgets">
+          <ol data-section="store" className="FoF-ForumWidgets-widgets-store">
             {app.widgets.widgets
               .filter((widget: Widget) => app.data.extensions[widget.extension!])
               .map((widget: Widget, index: number) => {
@@ -145,7 +143,7 @@ export default class WidgetEditor extends ExtensionPage<WidgetEditorAttrs> {
   createEditorSections(): void {
     this.cleanupLayout();
 
-    this.$('.Afrux-ForumWidgets-layout-section-items, .Afrux-ForumWidgets-widgets-store')
+    this.$('.FoF-ForumWidgets-layout-section-items, .FoF-ForumWidgets-widgets-store')
       .get()
       .map((e) => {
         const section = $(e).data('section');
@@ -166,7 +164,7 @@ export default class WidgetEditor extends ExtensionPage<WidgetEditorAttrs> {
           ghostClass: section !== 'store' ? 'sortable-placeholder' : '',
           onSort: this.onSortUpdate.bind(this),
           onClone: (e) => {
-            $(e.clone).attr('disabled', true);
+            $(e.clone).attr('disabled', 'disabled');
           },
           onAdd: (e) => {
             if (section === 'store') {
@@ -176,14 +174,14 @@ export default class WidgetEditor extends ExtensionPage<WidgetEditorAttrs> {
               });
 
               e.item.parentNode?.removeChild(e.item);
-              this.$(`.Afrux-ForumWidgets-widgets-store li[data-id="${e.item.dataset.id}"]`).attr('disabled', false);
+              (this.$(`.FoF-ForumWidgets-widgets-store li[data-id="${e.item.dataset.id}"]`) as any).removeAttr('disabled');
             }
           },
           onRemove: (e) => {
             if (section === 'store') {
               this.setConfig({
                 ...this.config,
-                disabled: (this.config.disabled || []).filter((wid) => wid !== e.item.dataset.id),
+                disabled: (this.config.disabled || []).filter((wid: string) => wid !== e.item.dataset.id),
               });
             }
           },
@@ -192,12 +190,12 @@ export default class WidgetEditor extends ExtensionPage<WidgetEditorAttrs> {
   }
 
   cleanupLayout(): void {
-    this.$('.Afrux-ForumWidgets-layout-section-items')
+    this.$('.FoF-ForumWidgets-layout-section-items')
       .get()
       .map((element) => {
         const section = element.dataset.section;
 
-        this.$(`.Afrux-ForumWidgets-layout-section-items[data-section="${section}"] li:not([data-section="${section}"])`).remove();
+        this.$(`.FoF-ForumWidgets-layout-section-items[data-section="${section}"] li:not([data-section="${section}"])`).remove();
       });
   }
 
@@ -205,12 +203,12 @@ export default class WidgetEditor extends ExtensionPage<WidgetEditorAttrs> {
     const extension = app.data.extensions[widget.extension!];
 
     return (
-      <div className="Afrux-ForumWidgets-Widget-container">
-        <div className="Afrux-ForumWidgets-Widget">
-          <span className="Afrux-ForumWidgets-Widget-icon ExtensionIcon" style={extension.icon}>
+      <div className="FoF-ForumWidgets-Widget-container">
+        <div className="FoF-ForumWidgets-Widget">
+          <span className="FoF-ForumWidgets-Widget-icon ExtensionIcon" style={extension.icon}>
             {extension.icon ? icon(extension.icon.name) : ''}
           </span>
-          <span className="Afrux-ForumWidgets-Widget-title">{extension.extra['flarum-extension'].title}</span>
+          <span className="FoF-ForumWidgets-Widget-title">{extension.extra['flarum-extension'].title}</span>
         </div>
       </div>
     );
@@ -219,7 +217,7 @@ export default class WidgetEditor extends ExtensionPage<WidgetEditorAttrs> {
   layoutWidget(widget: Widget): Mithril.Children {
     return (
       <li
-        className="Afrux-ForumWidgets-layout-widget"
+        className="FoF-ForumWidgets-layout-widget"
         data-id={widget.id}
         data-section={widget.placement}
         data-key={widget.key}
@@ -234,16 +232,17 @@ export default class WidgetEditor extends ExtensionPage<WidgetEditorAttrs> {
   onSortUpdate(): void {
     const instances: any[] = [];
 
-    this.$('.Afrux-ForumWidgets-layout-section-items')
+    this.$('.FoF-ForumWidgets-layout-section-items')
       .get()
       .map((sectionElement) => {
         const section = sectionElement.dataset.section;
 
-        Array.from(sectionElement.children).map((widgetElement, i: int) => {
+        Array.from(sectionElement.children).map((widgetElement, i: number) => {
+          const el = widgetElement as HTMLElement;
           instances.push({
-            id: widgetElement.dataset.id,
-            extension: widgetElement.dataset.extension,
-            key: widgetElement.dataset.key,
+            id: el.dataset.id,
+            extension: el.dataset.extension,
+            key: el.dataset.key,
             placement: sectionElement.dataset.section,
             position: i,
           });
@@ -262,14 +261,14 @@ export default class WidgetEditor extends ExtensionPage<WidgetEditorAttrs> {
     return disabled.includes(widget.id) && widget.isUnique;
   }
 
-  makePlaceholders(key: string, count: number = 1, minWidth?: number, maxWidth?: number): Mithril.Children {
+  makePlaceholders(key: string, count: number = 1, minWidth?: number, maxWidth?: number): Mithril.Vnode[] {
     if (this.placeholderCache[key]) return this.placeholderCache[key];
 
     return (this.placeholderCache[key] = Array(count)
       .fill(null)
       .map(() => (
         <div
-          className="Afrux-ForumWidgets-layout-placeholder"
+          className="FoF-ForumWidgets-layout-placeholder"
           style={
             minWidth && maxWidth
               ? {

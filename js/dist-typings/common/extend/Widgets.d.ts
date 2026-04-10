@@ -1,6 +1,5 @@
-import { Application } from 'src/shims';
-export declare type Placement = 'start_top' | 'start_bottom' | 'end' | 'top' | 'bottom';
-export declare type Widget = {
+export type Placement = 'start_top' | 'start_bottom' | 'end' | 'top' | 'bottom';
+export type Widget = {
     id?: string;
     key: string;
     component: any;
@@ -14,5 +13,5 @@ export declare type Widget = {
 export default class Widgets {
     private widgets;
     add(widget: Widget): this;
-    extend(app: Application, extension: string): void;
+    extend(app: any, extension: string): void;
 }

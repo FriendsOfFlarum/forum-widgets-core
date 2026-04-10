@@ -1,4 +1,5 @@
-import * as Mithril from 'mithril';
+import app from 'flarum/forum/app';
+import type Mithril from 'mithril';
 import { extend } from 'flarum/common/extend';
 import IndexPage from 'flarum/forum/components/IndexPage';
 import type ItemList from 'flarum/common/utils/ItemList';
@@ -12,15 +13,16 @@ import BottomWidgetSection from './components/BottomWidgetSection';
 
 app.widgets = new WidgetManager();
 
-app.initializers.add('afrux/forum-widgets-core', () => {
-  app.widgets.setConfig(app.data.resources[0].attributes['afrux-forum-widgets-core.config']);
+app.initializers.add('fof/forum-widgets-core', () => {
+  app.widgets.setConfig((app.data.resources[0] as any)?.attributes['fof-forum-widgets-core.config']);
 
   extend(IndexPage.prototype, 'view', function (vnode: Mithril.Vnode) {
-    vnode.children[1].children[0].children.push(<EndWidgetSection />);
-    vnode.children[1].children = [<TopWidgetSection />, ...vnode.children[1].children, <BottomWidgetSection />];
+    const children = vnode.children as any[];
+    children[1].children[0].children.push(<EndWidgetSection />);
+    children[1].children = [<TopWidgetSection />, ...children[1].children, <BottomWidgetSection />];
   });
 
-  extend(IndexPage.prototype, 'sidebarItems', (items: ItemList) => {
+  extend(IndexPage.prototype, 'sidebarItems', (items: ItemList<any>) => {
     items.add('startTopWidgetSection', <StartTopWidgetSection />, 100);
     items.add('startBottomWidgetSection', <StartBottomWidgetSection />, -100);
   });

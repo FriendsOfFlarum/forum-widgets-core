@@ -1,5 +1,3 @@
-import { Application } from 'src/shims';
-
 export type Placement = 'start_top' | 'start_bottom' | 'end' | 'top' | 'bottom';
 
 export type Widget = {
@@ -23,7 +21,7 @@ export default class Widgets {
     return this;
   }
 
-  extend(app: Application, extension: string): void {
+  extend(app: any, extension: string): void {
     this.widgets.forEach((widget: Widget) => {
       app.widgets.add(widget, extension);
     });

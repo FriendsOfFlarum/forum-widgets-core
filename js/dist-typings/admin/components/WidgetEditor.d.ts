@@ -9,7 +9,7 @@ export default class WidgetEditor extends ExtensionPage<WidgetEditorAttrs> {
     private placeholderCache;
     oninit(vnode: Mithril.Vnode<WidgetEditorAttrs, this>): void;
     onupdate(vnode: Mithril.Vnode<WidgetEditorAttrs, this>): void;
-    content(vnode: Mithril.Vnode<WidgetEditorAttrs, this>): JSX.Element;
+    content(): JSX.Element;
     editor(): Mithril.Children;
     createEditorSections(): void;
     cleanupLayout(): void;
@@ -17,7 +17,7 @@ export default class WidgetEditor extends ExtensionPage<WidgetEditorAttrs> {
     layoutWidget(widget: Widget): Mithril.Children;
     onSortUpdate(): void;
     isWidgetAvailable(widget: Widget): boolean;
-    makePlaceholders(key: string, count?: number, minWidth?: number, maxWidth?: number): Mithril.Children;
+    makePlaceholders(key: string, count?: number, minWidth?: number, maxWidth?: number): Mithril.Vnode[];
     getConfig(): any;
     setConfig(config: any): void;
 }

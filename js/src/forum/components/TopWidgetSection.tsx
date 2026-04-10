@@ -1,3 +1,4 @@
+import app from 'flarum/forum/app';
 import * as Mithril from 'mithril';
 import Component from 'flarum/common/Component';
 import Stream from 'flarum/common/utils/Stream';
@@ -6,9 +7,9 @@ import classList from 'flarum/common/utils/classList';
 import sortWidgets from '../../common/utils/sortWidgets';
 
 export default class TopWidgetSection extends Component {
-  scrollEnd: Stream;
+  scrollEnd: Stream<boolean>;
 
-  oninit(vnode): void {
+  oninit(vnode: Mithril.Vnode): void {
     super.oninit(vnode);
 
     this.scrollEnd = Stream(false);
@@ -20,14 +21,15 @@ export default class TopWidgetSection extends Component {
     return (
       <div
         className={classList({
-          'AfruxWidgets-topWidgetSection AfruxWidgets-WidgetSection': true,
-          'AfruxWidgets-WidgetSection--endScroll': isSmallScreen && this.scrollEnd(),
+          'FofWidgets-topWidgetSection FofWidgets-WidgetSection': true,
+          'FofWidgets-WidgetSection--endScroll': isSmallScreen && this.scrollEnd(),
         })}
-        onscroll={(e) => {
+        onscroll={(e: Event) => {
           if (isSmallScreen) {
             this.scrollEnd(false);
 
-            if (e.target.offsetWidth + e.target.scrollLeft >= e.target.scrollWidth) {
+            const target = e.target as HTMLElement;
+            if (target.offsetWidth + target.scrollLeft >= target.scrollWidth) {
               this.scrollEnd(true);
             }
           }

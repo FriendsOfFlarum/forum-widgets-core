@@ -10,9 +10,9 @@ export interface WidgetAttrs extends ComponentAttrs {
 export default class Widget<T extends WidgetAttrs> extends Component<T> {
   view(): Mithril.Children {
     return (
-      <div className={classList(['AfruxWidgets-Widget', this.className()])}>
+      <div className={classList(['FofWidgets-Widget', this.className()])}>
         {this.header()}
-        <div className="AfruxWidgets-Widget-content">{this.content()}</div>
+        <div className="FofWidgets-Widget-content">{this.content()}</div>
       </div>
     );
   }
@@ -22,10 +22,10 @@ export default class Widget<T extends WidgetAttrs> extends Component<T> {
     const title = this.title();
 
     return title ? (
-      <div className="AfruxWidgets-Widget-title">
-        {iconName ? <span className="AfruxWidgets-Widget-title-icon">{icon(iconName)}</span> : null}
-        <span className="AfruxWidgets-Widget-title-label">{title}</span>
-        <div className="AfruxWidgets-Widget-title-desc">{this.description()}</div>
+      <div className="FofWidgets-Widget-title">
+        {iconName ? <span className="FofWidgets-Widget-title-icon">{icon(iconName)}</span> : null}
+        <span className="FofWidgets-Widget-title-label">{title}</span>
+        <div className="FofWidgets-Widget-title-desc">{this.description()}</div>
       </div>
     ) : null;
   }

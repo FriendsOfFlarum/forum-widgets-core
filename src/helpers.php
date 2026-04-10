@@ -1,6 +1,6 @@
 <?php
 
-namespace Afrux\ForumWidgets\Helper;
+namespace FoF\ForumWidgets\Helper;
 
 use Flarum\Foundation\Paths;
 use Illuminate\Cache\FileStore;
@@ -24,7 +24,7 @@ function pretty_number_format(int $number, int $precision = 2): string
     return $format;
 }
 
-function afrux_cache_is_writable(): bool
+function fof_cache_is_writable(): bool
 {
     $cacheRepository = resolve(Repository::class);
     $cacheStore = $cacheRepository->getStore();

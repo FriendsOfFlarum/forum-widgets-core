@@ -1,12 +1,12 @@
 <?php
 
-namespace Afrux\ForumWidgets;
+namespace FoF\ForumWidgets;
 
 use Closure;
 use Illuminate\Contracts\Cache\Repository;
 use Monolog\Logger;
 use Psr\Log\LoggerInterface;
-use function Afrux\ForumWidgets\Helper\afrux_cache_is_writable;
+use function FoF\ForumWidgets\Helper\fof_cache_is_writable;
 
 class SafeCacheRepositoryAdapter
 {
@@ -28,7 +28,7 @@ class SafeCacheRepositoryAdapter
 
     public function remember($key, $ttl, Closure $callback)
     {
-        if (! afrux_cache_is_writable()) {
+        if (! fof_cache_is_writable()) {
             $this->logger->log(Logger::WARNING, 'Cannot use file cache because storage/cache is not writable, this will affect the software.');
 
             return null;
