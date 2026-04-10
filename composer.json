@@ -46,7 +46,7 @@
         },
         "flarum-extension": {
             "title": "FoF Forum Widgets",
-            "category": "",
+            "category": "forum-widget",
             "icon": {
                 "image": "icon.svg"
             }
