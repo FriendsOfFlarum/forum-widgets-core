@@ -1,8 +1,16 @@
 <?php
 
+/*
+ * This file is part of fof/forum-widgets-core.
+ *
+ * Copyright (c) 2026 Friends of Flarum.
+ *
+ * For the full copyright and license information, please view the LICENSE.md
+ * file that was distributed with this source code.
+ */
+
 namespace FoF\ForumWidgets\Helper;
 
-use Flarum\Foundation\Paths;
 use Illuminate\Cache\FileStore;
 use Illuminate\Contracts\Cache\Repository;
 
@@ -14,11 +22,11 @@ function pretty_number_format(int $number, int $precision = 2): string
     if ($number < 1000) {
         $format = number_format($number);
     } elseif ($number < 1000000) {
-        $format = number_format($number / 1000, $precision) . 'K';
+        $format = number_format($number / 1000, $precision).'K';
     } elseif ($number < 1000000000) {
-        $format = number_format($number / 1000000, $precision) . 'M';
+        $format = number_format($number / 1000000, $precision).'M';
     } else {
-        $format = number_format($number / 1000000000, $precision) . 'B';
+        $format = number_format($number / 1000000000, $precision).'B';
     }
 
     return $format;

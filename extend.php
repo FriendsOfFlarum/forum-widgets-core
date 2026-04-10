@@ -13,6 +13,7 @@ namespace FoF\ForumWidgets;
 
 use Flarum\Extend;
 use Flarum\Frontend\Document;
+
 use function FoF\ForumWidgets\Helper\fof_cache_is_writable;
 
 return [
@@ -29,7 +30,7 @@ return [
 
     new Extend\Locales(__DIR__.'/locale'),
 
-    (new Extend\Settings)
+    (new Extend\Settings())
         ->serializeToForum('fof-forum-widgets-core.config', 'fof-forum-widgets-core.config', function (?string $value): array {
             return $value ? json_decode($value, true) : [];
         })
