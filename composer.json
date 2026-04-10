@@ -45,7 +45,7 @@
             "dev-1.x": "1.x-dev"
         },
         "flarum-extension": {
-            "title": "Forum Widgets",
+            "title": "FoF Forum Widgets",
             "category": "",
             "icon": {
                 "image": "icon.svg"
