@@ -121,4 +121,4 @@ app.initializers.add('my-extension-id', () => {
 
 - [Packagist](https://packagist.org/packages/fof/forum-widgets-core)
 - [GitHub](https://github.com/FriendsOfFlarum/forum-widgets-core)
-- [Discuss](https://discuss.flarum.org/d/PUT_DISCUSS_SLUG_HERE)
+- [Discuss](https://discuss.flarum.org/d/39064)
