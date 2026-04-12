@@ -20,6 +20,11 @@
     padding: 0;
     margin: 0;
 
+    > li {
+      overflow: hidden;
+      width: var(--item-size);
+    }
+
     > li[disabled] {
       filter: grayscale(1);
       opacity: 0.7;

@@ -24,12 +24,6 @@ export default class WidgetEditor extends ExtensionPage<WidgetEditorAttrs> {
     app.widgets.setConfig(this.config);
   }
 
-  onupdate(vnode: Mithril.Vnode<WidgetEditorAttrs, this>): void {
-    super.onupdate(vnode);
-
-    this.cleanupLayout();
-  }
-
   content() {
     const settings = app.registry.getSettings(this.extension.id);
 
@@ -51,7 +45,7 @@ export default class WidgetEditor extends ExtensionPage<WidgetEditorAttrs> {
 
   editor(): Mithril.Children {
     return (
-      <div className="FoF-ForumWidgets-editor" oncreate={this.createEditorSections.bind(this)}>
+      <div className="FoF-ForumWidgets-editor" oncreate={this.createEditorSections.bind(this)} onbeforeupdate={() => false}>
         <div className="FoF-ForumWidgets-layout">
           <div className="FoF-ForumWidgets-layout-header FoF-ForumWidgets-layout-concrete">
             <div className="FoF-ForumWidgets-layout-container FoF-ForumWidgets-layout-headerWrapper">
@@ -142,8 +136,6 @@ export default class WidgetEditor extends ExtensionPage<WidgetEditorAttrs> {
   }
 
   createEditorSections(): void {
-    this.cleanupLayout();
-
     this.$('.FoF-ForumWidgets-layout-section-items, .FoF-ForumWidgets-widgets-store')
       .get()
       .map((e) => {
@@ -190,16 +182,6 @@ export default class WidgetEditor extends ExtensionPage<WidgetEditorAttrs> {
       });
   }
 
-  cleanupLayout(): void {
-    this.$('.FoF-ForumWidgets-layout-section-items')
-      .get()
-      .map((element) => {
-        const section = element.dataset.section;
-
-        this.$(`.FoF-ForumWidgets-layout-section-items[data-section="${section}"] li:not([data-section="${section}"])`).remove();
-      });
-  }
-
   widget(widget: Widget, placed: boolean = false): Mithril.Children {
     const extension = app.data.extensions[widget.extension!];
 
@@ -223,7 +205,7 @@ export default class WidgetEditor extends ExtensionPage<WidgetEditorAttrs> {
         data-section={widget.placement}
         data-key={widget.key}
         data-extension={widget.extension}
-        key={Math.floor(Math.random() * 200)}
+        key={widget.id}
       >
         {this.widget(widget, true)}
       </li>

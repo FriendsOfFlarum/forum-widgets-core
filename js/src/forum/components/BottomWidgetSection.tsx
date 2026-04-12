@@ -6,9 +6,13 @@ import sortWidgets from '../../common/utils/sortWidgets';
 
 export default class BottomWidgetSection extends Component {
   view(): Mithril.Children {
+    if (!app.widgets.get('bottom').length) return null;
+
     return (
-      <div className="FofWidgets-bottomWidgetSection FofWidgets-WidgetSection">
-        {sortWidgets(app.widgets.get('bottom')).map((widget) => widget.component.component({ state: widget.state }))}
+      <div className="container">
+        <div className="FofWidgets-bottomWidgetSection FofWidgets-WidgetSection">
+          {sortWidgets(app.widgets.get('bottom')).map((widget) => widget.component.component({ state: widget.state }))}
+        </div>
       </div>
     );
   }

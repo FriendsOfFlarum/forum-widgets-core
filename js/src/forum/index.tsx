@@ -1,7 +1,7 @@
 import IndexSidebar from 'flarum/forum/components/IndexSidebar';
+import PageStructure from 'flarum/forum/components/PageStructure';
 import app from 'flarum/forum/app';
 import { extend } from 'flarum/common/extend';
-import IndexPage from 'flarum/forum/components/IndexPage';
 import type ItemList from 'flarum/common/utils/ItemList';
 
 import WidgetManager from '../common/WidgetManager';
@@ -16,10 +16,13 @@ app.widgets = new WidgetManager();
 app.initializers.add('fof/forum-widgets-core', () => {
   app.widgets.setConfig((app.data.resources[0] as any)?.attributes['fof-forum-widgets-core.config']);
 
-  extend(IndexPage.prototype, 'contentItems', function (items: ItemList<any>) {
-    items.add('topWidgetSection', <TopWidgetSection />, 110);
-    items.add('bottomWidgetSection', <BottomWidgetSection />, -10);
-    items.add('endWidgetSection', <EndWidgetSection />, -20);
+  extend(PageStructure.prototype, 'mainItems', function (items: ItemList<any>) {
+    items.add('topWidgetSection', <TopWidgetSection />, 15);
+    items.add('bottomWidgetSection', <BottomWidgetSection />, 5);
+  });
+
+  extend(PageStructure.prototype, 'containerItems', function (items: ItemList<any>) {
+    items.add('endWidgetSection', <EndWidgetSection />, 1);
   });
 
   extend(IndexSidebar.prototype, 'items', (items: ItemList<any>) => {
