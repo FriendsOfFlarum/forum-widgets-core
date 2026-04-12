@@ -20,20 +20,8 @@ use function FoF\ForumWidgets\Helper\fof_cache_is_writable;
 
 class SafeCacheRepositoryAdapter
 {
-    /**
-     * @var Repository
-     */
-    protected $cache;
-
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-
-    public function __construct(Repository $cache, LoggerInterface $logger)
+    public function __construct(protected Repository $cache, protected LoggerInterface $logger)
     {
-        $this->cache = $cache;
-        $this->logger = $logger;
     }
 
     public function remember($key, $ttl, Closure $callback)
