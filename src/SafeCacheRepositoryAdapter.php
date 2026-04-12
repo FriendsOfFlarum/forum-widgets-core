@@ -13,33 +13,20 @@ namespace FoF\ForumWidgets;
 
 use Closure;
 use Illuminate\Contracts\Cache\Repository;
-use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 
 use function FoF\ForumWidgets\Helper\fof_cache_is_writable;
 
 class SafeCacheRepositoryAdapter
 {
-    /**
-     * @var Repository
-     */
-    protected $cache;
-
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-
-    public function __construct(Repository $cache, LoggerInterface $logger)
+    public function __construct(protected Repository $cache, protected LoggerInterface $logger)
     {
-        $this->cache = $cache;
-        $this->logger = $logger;
     }
 
     public function remember($key, $ttl, Closure $callback)
     {
         if (!fof_cache_is_writable()) {
-            $this->logger->log(Logger::WARNING, 'Cannot use file cache because storage/cache is not writable, this will affect the software.');
+            $this->logger->warning('Cannot use file cache because storage/cache is not writable, this will affect the software.');
 
             return null;
         }

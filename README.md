@@ -55,7 +55,7 @@ Extension developers wanting to create widgets with this small framework, the fo
 2. Create your widget's component in `common/components` by extending the base `Widget` component:
 
 ```jsx
-import Widget from 'flarum/extensions/fof-forum-widgets-core/common/components/Widget';
+import Widget from 'ext:fof/forum-widgets-core/common/components/Widget';
 
 export default class MyWidget extends Widget {
   className() {
@@ -81,7 +81,7 @@ export default class MyWidget extends Widget {
 3. Register your widget in both frontends. Create `common/registerWidget.js`:
 
 ```js
-import Widgets from 'flarum/extensions/fof-forum-widgets-core/common/extend/Widgets';
+import Widgets from 'ext:fof/forum-widgets-core/common/extend/Widgets';
 import MyWidget from './components/MyWidget';
 
 export default function (app) {
@@ -114,7 +114,7 @@ app.initializers.add('my-extension-id', () => {
 4. For TypeScript, add this to the `paths` key in your `tsconfig.json`:
 
 ```json
-"flarum/extensions/fof-forum-widgets-core/*": ["../vendor/fof/forum-widgets-core/js/dist-typings/*"]
+"ext:fof/forum-widgets-core/*": ["../vendor/fof/forum-widgets-core/js/dist-typings/*"]
 ```
 
 ## Links

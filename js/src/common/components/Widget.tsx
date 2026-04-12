@@ -1,7 +1,7 @@
 import * as Mithril from 'mithril';
 import Component, { ComponentAttrs } from 'flarum/common/Component';
 import classList from 'flarum/common/utils/classList';
-import icon from 'flarum/common/helpers/icon';
+import Icon from 'flarum/common/components/Icon';
 
 export interface WidgetAttrs extends ComponentAttrs {
   state: any;
@@ -23,7 +23,11 @@ export default class Widget<T extends WidgetAttrs> extends Component<T> {
 
     return title ? (
       <div className="FofWidgets-Widget-title">
-        {iconName ? <span className="FofWidgets-Widget-title-icon">{icon(iconName)}</span> : null}
+        {iconName ? (
+          <span className="FofWidgets-Widget-title-icon">
+            <Icon name={iconName} />
+          </span>
+        ) : null}
         <span className="FofWidgets-Widget-title-label">{title}</span>
         <div className="FofWidgets-Widget-title-desc">{this.description()}</div>
       </div>

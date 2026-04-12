@@ -2,7 +2,10 @@
     "name": "fof/forum-widgets-core",
     "description": "Core Extension for Managing Forum Widgets",
     "keywords": [
-        "flarum", "widgets", "framework", "core"
+        "flarum",
+        "widgets",
+        "framework",
+        "core"
     ],
     "type": "flarum-extension",
     "license": "MIT",
@@ -28,21 +31,22 @@
         "afrux/forum-widgets-core": "*"
     },
     "require": {
-        "php": "^8.2",
-        "flarum/core": "^1.8"
+        "flarum/core": "^2.0.0"
     },
     "require-dev": {
-        "flarum/phpstan": "*"
+        "flarum/phpstan": "^2.0.0"
     },
     "autoload": {
         "psr-4": {
             "FoF\\ForumWidgets\\": "src/"
         },
-        "files": ["src/helpers.php"]
+        "files": [
+            "src/helpers.php"
+        ]
     },
     "extra": {
         "branch-alias": {
-            "dev-1.x": "1.x-dev"
+            "dev-2.x": "2.x-dev"
         },
         "flarum-extension": {
             "title": "FoF Widgets Core",
@@ -63,5 +67,7 @@
     },
     "scripts-descriptions": {
         "analyse:phpstan": "Run static analysis"
-    }
+    },
+    "minimum-stability": "beta",
+    "prefer-stable": true
 }
