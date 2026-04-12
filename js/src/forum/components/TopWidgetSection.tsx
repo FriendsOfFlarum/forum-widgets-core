@@ -16,26 +16,30 @@ export default class TopWidgetSection extends Component {
   }
 
   view(): Mithril.Children {
+    if (!app.widgets.get('top').length) return null;
+
     const isSmallScreen = ['phone', 'tablet'].includes(app.screen());
 
     return (
-      <div
-        className={classList({
-          'FofWidgets-topWidgetSection FofWidgets-WidgetSection': true,
-          'FofWidgets-WidgetSection--endScroll': isSmallScreen && this.scrollEnd(),
-        })}
-        onscroll={(e: Event) => {
-          if (isSmallScreen) {
-            this.scrollEnd(false);
+      <div className="container">
+        <div
+          className={classList({
+            'FofWidgets-topWidgetSection FofWidgets-WidgetSection': true,
+            'FofWidgets-WidgetSection--endScroll': isSmallScreen && this.scrollEnd(),
+          })}
+          onscroll={(e: Event) => {
+            if (isSmallScreen) {
+              this.scrollEnd(false);
 
-            const target = e.target as HTMLElement;
-            if (target.offsetWidth + target.scrollLeft >= target.scrollWidth) {
-              this.scrollEnd(true);
+              const target = e.target as HTMLElement;
+              if (target.offsetWidth + target.scrollLeft >= target.scrollWidth) {
+                this.scrollEnd(true);
+              }
             }
-          }
-        }}
-      >
-        {sortWidgets(app.widgets.get('top')).map((widget) => widget.component.component({ state: widget.state }))}
+          }}
+        >
+          {sortWidgets(app.widgets.get('top')).map((widget) => widget.component.component({ state: widget.state }))}
+        </div>
       </div>
     );
   }
