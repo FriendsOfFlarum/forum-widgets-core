@@ -28,9 +28,6 @@ app.initializers.add('fof/forum-widgets-core', () => {
   });
 });
 
-// Expose compat API
-import customCompat from './compat';
+// Allow flarum to discover modules
+import './forum';
 // @ts-ignore
-import { compat } from '@flarum/core/forum';
-
-Object.assign(compat, customCompat);
