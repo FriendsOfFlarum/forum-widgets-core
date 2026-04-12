@@ -8,11 +8,9 @@ export default class WidgetEditor extends ExtensionPage<WidgetEditorAttrs> {
     private config?;
     private placeholderCache;
     oninit(vnode: Mithril.Vnode<WidgetEditorAttrs, this>): void;
-    onupdate(vnode: Mithril.Vnode<WidgetEditorAttrs, this>): void;
     content(): JSX.Element;
     editor(): Mithril.Children;
     createEditorSections(): void;
-    cleanupLayout(): void;
     widget(widget: Widget, placed?: boolean): Mithril.Children;
     layoutWidget(widget: Widget): Mithril.Children;
     onSortUpdate(): void;
