@@ -5,7 +5,7 @@
   grid-template-columns: minmax(min-content, 900px) minmax(calc(~"(var(--item-size) + var(--gap)) * 2 - var(--gap)"), 10%);
   grid-gap: calc(~"var(--gap) * 2");
   align-items: flex-start;
-  background-color: @body-bg;
+  background-color: var(--body-bg);
   padding: 16px;
 }
 
@@ -45,7 +45,7 @@
     font-size: 0.65rem;
     font-weight: bold;
     text-overflow: ellipsis;
-    color: @muted-more-color;
+    color: var(--muted-more-color);
   }
 
   .FoF-ForumWidgets-layout & {
@@ -63,7 +63,7 @@
       justify-content: center;
       flex-grow: 1;
       padding: 16px;
-      background: lighten(@control-bg, 2);
+      background: var(--control-bg-lighten-2);
       transition: filter 0.2s ease-in-out;
       cursor: grab;
 
@@ -86,7 +86,7 @@
   display: grid;
   grid-template-rows: 52px 150px 1fr;
   grid-gap: var(--gap);
-  border: 4px solid @control-bg;
+  border: 4px solid var(--control-bg);
   padding-bottom: 2rem;
   border-radius: 8px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
@@ -106,14 +106,14 @@
   }
 
   &-header {
-    background: @header-bg;
+    background: var(--header-bg);
     display: flex;
     align-items: center;
     border-radius: 8px 8px 0 0;
     margin-bottom: calc(~"0px - var(--gap)");
 
     .FoF-ForumWidgets-layout-placeholder {
-      background-color: @header-control-bg;
+      background-color: var(--header-control-bg);
     }
   }
 
@@ -133,7 +133,7 @@
   }
 
   &-hero {
-    background-color: @control-bg;
+    background-color: var(--control-bg);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -143,7 +143,7 @@
   }
 
   &-hero &-placeholder {
-    background-color: darken(@control-bg, 8);
+    background-color: var(--control-bg-darken-8);
 
     &:nth-child(2) {
       width: 46%;
@@ -170,14 +170,14 @@
 
   &-sideNav &-placeholder--button {
     width: 100%;
-    background-color: @primary-color;
+    background-color: var(--primary-color);
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
   &-sideNav &-placeholder--button &-placeholder {
-    background-color: @body-bg;
+    background-color: var(--body-bg);
   }
 
   &-placeholder--button &-placeholder {
@@ -215,7 +215,7 @@
 
   &-section {
     display: flex;
-    border: 4px dashed @control-bg;
+    border: 4px dashed var(--control-bg);
     padding: 4px;
     min-height: 20px;
 
@@ -243,7 +243,7 @@
 
   &-placeholder {
     --width: 62px;
-    background: @control-bg;
+    background: var(--control-bg);
     height: 12px;
     width: var(--width);
     border-radius: 2px;
@@ -277,4 +277,14 @@
       height: 35px;
     }
   }
+}
+
+
+[data-theme^=light] {
+  --control-bg-lighten-2: lighten(@control-bg-light, 2);
+  --control-bg-darken-8: darken(@control-bg-light, 8);
+}
+[data-theme^=dark] {
+  --control-bg-lighten-2: lighten(@control-bg-dark, 2);
+  --control-bg-darken-8: darken(@control-bg-dark, 8);
 }
