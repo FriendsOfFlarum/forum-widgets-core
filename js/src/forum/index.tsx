@@ -1,3 +1,4 @@
+import IndexSidebar from 'flarum/forum/components/IndexSidebar';
 import app from 'flarum/forum/app';
 import type Mithril from 'mithril';
 import { extend } from 'flarum/common/extend';
@@ -22,7 +23,7 @@ app.initializers.add('fof/forum-widgets-core', () => {
     children[1].children = [<TopWidgetSection />, ...children[1].children, <BottomWidgetSection />];
   });
 
-  extend(IndexPage.prototype, 'sidebarItems', (items: ItemList<any>) => {
+  extend(IndexSidebar.prototype, 'items', (items: ItemList<any>) => {
     items.add('startTopWidgetSection', <StartTopWidgetSection />, 100);
     items.add('startBottomWidgetSection', <StartBottomWidgetSection />, -100);
   });

@@ -5,7 +5,7 @@ import WidgetEditor from './components/WidgetEditor';
 app.widgets = new WidgetManager();
 
 app.initializers.add('fof/forum-widgets-core', () => {
-  app.extensionData
+  app.registry
     .for('fof-forum-widgets-core')
     .registerSetting({
       setting: 'fof-forum-widgets-core.prefer_data_with_initial_load',

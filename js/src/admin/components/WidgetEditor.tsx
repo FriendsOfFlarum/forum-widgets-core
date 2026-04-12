@@ -1,8 +1,9 @@
+import Form from 'flarum/common/components/Form';
 import app from 'flarum/admin/app';
 import sortable from 'sortablejs';
 import type Mithril from 'mithril';
 import ExtensionPage, { ExtensionPageAttrs } from 'flarum/admin/components/ExtensionPage';
-import icon from 'flarum/common/helpers/icon';
+import Icon from 'flarum/common/components/Icon';
 
 import sortWidgets from '../../common/utils/sortWidgets';
 import type { Widget } from '../../common/extend/Widgets';
@@ -30,7 +31,7 @@ export default class WidgetEditor extends ExtensionPage<WidgetEditorAttrs> {
   }
 
   content() {
-    const settings = app.extensionData.getSettings(this.extension.id);
+    const settings = app.registry.getSettings(this.extension.id);
 
     return (
       <div className="ExtensionPage-settings">
@@ -38,11 +39,11 @@ export default class WidgetEditor extends ExtensionPage<WidgetEditorAttrs> {
           {!app.data['fof-forum-widgets-core.cache_store_writable'] ? (
             <Alert type="error">{app.translator.trans('fof-forum-widgets-core.admin.cache_not_writable_warning')}</Alert>
           ) : null}
-          <div className="Form">
+          <Form>
             <div className="Form-group">{this.editor()}</div>
             {settings ? settings.map(this.buildSettingComponent.bind(this)) : null}
             <div className="Form-group">{this.submitButton()}</div>
-          </div>
+          </Form>
         </div>
       </div>
     );
@@ -206,7 +207,7 @@ export default class WidgetEditor extends ExtensionPage<WidgetEditorAttrs> {
       <div className="FoF-ForumWidgets-Widget-container">
         <div className="FoF-ForumWidgets-Widget">
           <span className="FoF-ForumWidgets-Widget-icon ExtensionIcon" style={extension.icon}>
-            {extension.icon ? icon(extension.icon.name) : ''}
+            {extension.icon ? <Icon name={extension.icon.name} /> : ''}
           </span>
           <span className="FoF-ForumWidgets-Widget-title">{extension.extra['flarum-extension'].title}</span>
         </div>
