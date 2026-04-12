@@ -47,8 +47,8 @@ Extension developers wanting to create widgets with this small framework, the fo
 
 ```json
 "require": {
-  "flarum/core": "^1.8.0",
-  "fof/forum-widgets-core": "^1.0.0"
+  "flarum/core": "^2.0.0",
+  "fof/forum-widgets-core": "^2.0.0"
 }
 ```
 
