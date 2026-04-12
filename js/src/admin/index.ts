@@ -1,19 +1,12 @@
 import app from 'flarum/admin/app';
 import WidgetManager from '../common/WidgetManager';
-import WidgetEditor from './components/WidgetEditor';
+
+export { default as extend } from './extend';
 
 app.widgets = new WidgetManager();
 
 app.initializers.add('fof/forum-widgets-core', () => {
-  app.registry
-    .for('fof-forum-widgets-core')
-    .registerSetting({
-      setting: 'fof-forum-widgets-core.prefer_data_with_initial_load',
-      label: app.translator.trans('fof-forum-widgets-core.admin.settings.prefer_data_with_initial_load'),
-      help: app.translator.trans('fof-forum-widgets-core.admin.settings.prefer_data_with_initial_load_help'),
-      type: 'boolean',
-    })
-    .registerPage(WidgetEditor);
+  // Nothing to do here yet.
 });
 
 // Allow flarum to discover modules

@@ -31,11 +31,10 @@
         "afrux/forum-widgets-core": "*"
     },
     "require": {
-        "php": "^8.2",
-        "flarum/core": "^2.0.0-beta"
+        "flarum/core": "^2.0.0"
     },
     "require-dev": {
-        "flarum/phpstan": "^2.0.0-beta"
+        "flarum/phpstan": "^2.0.0"
     },
     "autoload": {
         "psr-4": {
@@ -47,7 +46,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-1.x": "1.x-dev"
+            "dev-2.x": "2.x-dev"
         },
         "flarum-extension": {
             "title": "FoF Widgets Core",
@@ -68,5 +67,7 @@
     },
     "scripts-descriptions": {
         "analyse:phpstan": "Run static analysis"
-    }
+    },
+    "minimum-stability": "beta",
+    "prefer-stable": true
 }
