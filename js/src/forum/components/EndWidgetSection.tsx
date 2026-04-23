@@ -6,6 +6,7 @@ import sortWidgets from '../../common/utils/sortWidgets';
 
 export default class EndWidgetSection extends Component {
   view(): Mithril.Children {
+    if ((app.current.data as any).routeName !== 'index') return null;
     if (!app.widgets.get('end').length) return null;
 
     return (
