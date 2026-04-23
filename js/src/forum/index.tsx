@@ -26,8 +26,12 @@ app.initializers.add('fof/forum-widgets-core', () => {
   });
 
   extend(IndexSidebar.prototype, 'items', (items: ItemList<any>) => {
-    items.add('startTopWidgetSection', <StartTopWidgetSection />, 100);
-    items.add('startBottomWidgetSection', <StartBottomWidgetSection />, -100);
+    if (app.widgets.get('start_top').length) {
+      items.add('startTopWidgetSection', <StartTopWidgetSection />, 100);
+    }
+    if (app.widgets.get('start_bottom').length) {
+      items.add('startBottomWidgetSection', <StartBottomWidgetSection />, -100);
+    }
   });
 });
 
