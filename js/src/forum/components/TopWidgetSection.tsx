@@ -16,6 +16,7 @@ export default class TopWidgetSection extends Component {
   }
 
   view(): Mithril.Children {
+    if ((app.current.data as any).routeName !== 'index') return null;
     if (!app.widgets.get('top').length) return null;
 
     const isSmallScreen = ['phone', 'tablet'].includes(app.screen());
