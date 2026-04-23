@@ -10,6 +10,8 @@ export default class StartBottomWidgetSection extends Component {
       return null;
     }
 
+    if (!app.widgets.get('start_bottom').length) return null;
+
     return (
       <div className="FofWidgets-startBottom FofWidgets-WidgetSection">
         {sortWidgets(app.widgets.get('start_bottom')).map((widget) => widget.component.component({ state: widget.state }))}
