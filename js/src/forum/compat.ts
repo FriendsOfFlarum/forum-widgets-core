@@ -5,6 +5,7 @@ import StartTopWidgetSection from './components/StartTopWidgetSection';
 import StartBottomWidgetSection from './components/StartBottomWidgetSection';
 import TopWidgetSection from './components/TopWidgetSection';
 import BottomWidgetSection from './components/BottomWidgetSection';
+import FloatingWidgetSection from './components/FloatingWidgetSection';
 
 export default Object.assign(compat, {
   'extensions/fof-forum-widgets-core/forum/components/EndWidgetSection': EndWidgetSection,
@@ -12,4 +13,5 @@ export default Object.assign(compat, {
   'extensions/fof-forum-widgets-core/forum/components/StartBottomWidgetSection': StartBottomWidgetSection,
   'extensions/fof-forum-widgets-core/forum/components/TopWidgetSection': TopWidgetSection,
   'extensions/fof-forum-widgets-core/forum/components/BottomWidgetSection': BottomWidgetSection,
+  'extensions/fof-forum-widgets-core/forum/components/FloatingWidgetSection': FloatingWidgetSection,
 });
