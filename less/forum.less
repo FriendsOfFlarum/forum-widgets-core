@@ -92,3 +92,113 @@
     }
   }
 }
+
+// Floating dock: a launcher button pinned to the bottom-right corner that
+// expands a panel of the widgets assigned to the `floating` placement.
+.FofWidgets-floatingWidgetSection {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: var(--zindex-header, 100);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  pointer-events: none;
+
+  > * {
+    pointer-events: auto;
+  }
+
+  &-toggle {
+    width: 56px;
+    height: 56px;
+    padding: 0;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: var(--primary-color-contrast, #fff);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    font-size: 20px;
+    flex-shrink: 0;
+
+    &:hover,
+    &:focus {
+      background: var(--primary-color);
+      filter: brightness(1.08);
+    }
+
+    .Button-label {
+      display: none;
+    }
+  }
+
+  &-panel {
+    position: relative;
+    width: 320px;
+    max-width: ~"calc(100vw - 40px)";
+    max-height: ~"calc(100vh - 120px)";
+    overflow-y: auto;
+    // Keep scrolling inside the panel: don't chain to the page behind it.
+    overscroll-behavior: contain;
+    padding: 16px;
+    background: var(--body-bg);
+    border-radius: var(--border-radius);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.28);
+  }
+
+  // The panel already frames the widgets, so drop the widget's own card
+  // background to avoid a box-in-a-box look.
+  &-panelBody .FofWidgets-Widget-content {
+    background: transparent;
+    padding: 0;
+  }
+
+  @media @phone {
+    right: 12px;
+    bottom: 12px;
+    // Sit above the fixed forum header (and its title control) so the
+    // full-screen panel covers it cleanly, while staying below the composer,
+    // modal and alert layers so those still surface over the dock.
+    z-index: ~"calc(var(--zindex-header, 1000) + 15)";
+
+    // Full-screen takeover on phones: the panel fills the viewport and scrolls
+    // vertically when the stacked widgets overflow. The launcher button stays
+    // on top as the close control (there is no separate close button).
+    &-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      width: 100vw;
+      max-width: none;
+      height: 100vh;
+      height: 100dvh;
+      max-height: none;
+      border-radius: 0;
+      box-shadow: none;
+      z-index: 1;
+      // Bottom padding clears the launcher button in the corner so the last
+      // widget is never hidden behind it.
+      padding-bottom: 88px;
+      // iOS momentum scrolling for the widget list.
+      -webkit-overflow-scrolling: touch;
+    }
+
+    &-toggle {
+      position: relative;
+      z-index: 2;
+    }
+  }
+}
+
+// Lock the background scroll while the full-screen dock is open on phones, so
+// only the panel itself scrolls. The class is toggled on the scrolling element
+// (<html>) by the component; scoped to the phone breakpoint since the desktop
+// panel is a small overlay that should not freeze the page behind it.
+@media @phone {
+  html.FofWidgets-floatingLock,
+  html.FofWidgets-floatingLock body {
+    overflow: hidden;
+  }
+}

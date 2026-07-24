@@ -293,3 +293,28 @@
   --control-bg-lighten-2: lighten(@control-bg-dark, 2);
   --control-bg-darken-8: darken(@control-bg-dark, 8);
 }
+
+// The floating dock stacks its widgets vertically, exactly like the right
+// sidebar, so mirror that region: reuse the standard dashed section frame (via
+// the -section class on the inner box) and present a narrow column, aligned to
+// the right below the footer to echo the bottom-corner position on the forum.
+.FoF-ForumWidgets-layout-floating {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 165px;
+  margin-top: 8px;
+  margin-left: auto;
+
+  &-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: var(--muted-color);
+  }
+
+  .FoF-ForumWidgets-layout-section-items {
+    flex-direction: column;
+  }
+}
