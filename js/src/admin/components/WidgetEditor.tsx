@@ -118,6 +118,14 @@ export default class WidgetEditor extends ExtensionPage<WidgetEditorAttrs> {
                 {sortWidgets(app.widgets.get('bottom', true)).map((widget: Widget) => this.layoutWidget(widget))}
               </ol>
             </div>
+            <div className="FoF-ForumWidgets-layout-floating">
+              <span className="FoF-ForumWidgets-layout-floating-label">{app.translator.trans('fof-forum-widgets-core.admin.editor.floating')}</span>
+              <div className="FoF-ForumWidgets-layout-floatingSection FoF-ForumWidgets-layout-section">
+                <ol data-section="floating" className="FoF-ForumWidgets-layout-section-items">
+                  {sortWidgets(app.widgets.get('floating', true)).map((widget: Widget) => this.layoutWidget(widget))}
+                </ol>
+              </div>
+            </div>
           </div>
         </div>
         <div className="FoF-ForumWidgets-widgets">
