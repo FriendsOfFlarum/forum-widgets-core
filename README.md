@@ -93,7 +93,10 @@ export default function (app) {
       isDisabled: false,
       // Is this a one-time-use widget? Leave true if unsure.
       isUnique: true,
-      // Default values, overridable by the admin.
+      // Default placement, overridable by the admin. One of the index-page
+      // slots -- 'start_top', 'start_bottom', 'end', 'top', 'bottom' -- or
+      // 'floating' for a dock in the bottom corner that shows on every page
+      // and expands on click.
       placement: 'end',
       position: 1,
     })
