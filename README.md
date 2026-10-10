@@ -35,7 +35,6 @@ php flarum cache:clear
 
 ```sh
 composer update fof/forum-widgets-core:"*"
-php flarum migrate
 php flarum cache:clear
 ```
 

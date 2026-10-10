@@ -23,6 +23,18 @@ class SafeCacheRepositoryAdapter
     {
     }
 
+    /**
+     * Get an item from the cache, or run the callback and store its result.
+     * Returns null, without running the callback, when the cache is not writable.
+     *
+     * @template TCacheValue
+     *
+     * @param \UnitEnum|string                                   $key
+     * @param \DateTimeInterface|\DateInterval|\Closure|int|null $ttl
+     * @param Closure(): TCacheValue                             $callback
+     *
+     * @return TCacheValue|null
+     */
     public function remember($key, $ttl, Closure $callback)
     {
         if (!fof_cache_is_writable()) {
