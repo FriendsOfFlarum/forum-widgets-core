@@ -105,6 +105,13 @@ describe('WidgetEditor', () => {
     expect(placed(editor, 'end')).toEqual([]);
   });
 
+  it('lays widgets out as registered when the saved layout is not valid JSON', () => {
+    register('news', 'top');
+    app.data.settings[CONFIG] = '{"instances": [';
+
+    expect(placed(mount(), 'top')).toEqual(['acme-widgets:news']);
+  });
+
   it('places widgets that are hidden on the forum, so the admin can still arrange them', () => {
     register('news', 'top', { isDisabled: true });
 

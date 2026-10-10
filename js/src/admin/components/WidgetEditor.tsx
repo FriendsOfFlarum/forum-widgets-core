@@ -264,7 +264,11 @@ export default class WidgetEditor extends ExtensionPage<WidgetEditorAttrs> {
   }
 
   getConfig(): any {
-    return JSON.parse(this.setting(WidgetEditor.settingKey)() || '{}');
+    try {
+      return JSON.parse(this.setting(WidgetEditor.settingKey)() || '{}');
+    } catch {
+      return {};
+    }
   }
 
   setConfig(config: any): void {
