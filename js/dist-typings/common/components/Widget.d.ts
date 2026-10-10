@@ -7,8 +7,8 @@ export default class Widget<T extends WidgetAttrs> extends Component<T> {
     view(): Mithril.Children;
     header(): Mithril.Children;
     className(): string;
-    title(): string;
-    description(): string;
+    title(): Mithril.Children;
+    description(): Mithril.Children;
     icon(): string;
     content(): Mithril.Children;
 }
