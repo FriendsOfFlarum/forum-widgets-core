@@ -29,9 +29,9 @@ class SafeCacheRepositoryAdapter
      *
      * @template TCacheValue
      *
-     * @param \UnitEnum|string                                  $key
+     * @param \UnitEnum|string                                   $key
      * @param \DateTimeInterface|\DateInterval|\Closure|int|null $ttl
-     * @param Closure(): TCacheValue                            $callback
+     * @param Closure(): TCacheValue                             $callback
      *
      * @return TCacheValue|null
      */
