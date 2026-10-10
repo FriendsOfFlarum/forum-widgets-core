@@ -117,6 +117,21 @@ app.initializers.add('my-extension-id', () => {
 "ext:fof/forum-widgets-core/*": ["../vendor/fof/forum-widgets-core/js/dist-typings/*"]
 ```
 
+### Showing widgets on your own page
+
+Widgets show on the discussion list (`/all`, `/t/:tag`, `/following`) and on any page that extends `IndexPage`. To show them on another page your extension adds, register it in your forum initializer:
+
+```js
+import CategoriesPage from './components/CategoriesPage';
+
+app.initializers.add('my-extension-id', () => {
+  // Optional chaining keeps this working when the widgets extension is not installed.
+  app.widgets?.addPage(CategoriesPage);
+});
+```
+
+`addPage` also accepts a module path, such as `'ext:acme/example/forum/components/ExamplePage'`, to opt in a page from another extension without importing it.
+
 ## Links
 
 - [Packagist](https://packagist.org/packages/fof/forum-widgets-core)

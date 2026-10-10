@@ -6,9 +6,7 @@ import sortWidgets from '../../common/utils/sortWidgets';
 
 export default class StartBottomWidgetSection extends Component {
   view(): Mithril.Children {
-    if ((app.current.data as any).routeName !== 'index') {
-      return null;
-    }
+    if (!app.widgets.onWidgetPage()) return null;
 
     if (!app.widgets.get('start_bottom').length) return null;
 

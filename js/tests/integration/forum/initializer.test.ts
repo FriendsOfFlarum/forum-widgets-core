@@ -1,12 +1,15 @@
+import { jest } from '@jest/globals';
 import bootstrapForum from '@flarum/jest-config/src/bootstrap/forum';
 import { makeUser } from '@flarum/jest-config/factory';
 import m from 'mithril';
 import mq from 'mithril-query';
 import app from 'flarum/forum/app';
 import PageState from 'flarum/common/states/PageState';
+import ExportRegistry from 'flarum/common/ExportRegistry';
 import IndexPage from 'flarum/forum/components/IndexPage';
 import IndexSidebar from 'flarum/forum/components/IndexSidebar';
 import PageStructure from 'flarum/forum/components/PageStructure';
+import Page from 'flarum/common/components/Page';
 import Component from 'flarum/common/Component';
 import WidgetManager from '../../../src/common/WidgetManager';
 import type { Placement } from '../../../src/common/extend/Widgets';
@@ -18,6 +21,9 @@ class KeyWidget extends Component {
     return m('.KeyWidget');
   }
 }
+
+/** A page that is not a discussion list but still has the index sidebar, like the tags page. */
+class OtherPage extends Page {}
 
 const register = (key: string, placement: Placement) =>
   app.widgets.add({ key, placement, position: 0, component: KeyWidget, isDisabled: false, isUnique: true }, 'acme-widgets');
@@ -60,6 +66,38 @@ describe('the forum initializer', () => {
 
     expect(app.widgets.get('end')).toEqual([]);
     expect(app.widgets.get('bottom').map((w) => w.id)).toEqual(['acme-widgets:saved']);
+  });
+
+  it('shows widgets on every discussion list', () => {
+    for (const routeName of ['index', 'tag', 'following']) {
+      app.current = new PageState(IndexPage, { routeName });
+
+      expect(app.widgets.onWidgetPage()).toBe(true);
+    }
+
+    app.current = new PageState(OtherPage, { routeName: 'tags' });
+
+    expect(app.widgets.onWidgetPage()).toBe(false);
+  });
+
+  it("shows widgets on a page added by its module path, once that page's extension has loaded", () => {
+    // The test environment stubs `checkModule` to always return true; restore core's lookup.
+    jest.spyOn(flarum.reg, 'checkModule').mockImplementation(function (this: any, namespace: string, id: string) {
+      return ExportRegistry.prototype.checkModule.call(this, namespace, id);
+    });
+
+    class ExamplePage extends Page {}
+
+    const widgets = new WidgetManager().addPage('ext:acme/example/forum/components/ExamplePage');
+    app.current = new PageState(ExamplePage, { routeName: 'example' });
+
+    expect(widgets.onWidgetPage()).toBe(false);
+
+    flarum.reg.add('acme-example', 'forum/components/ExamplePage', ExamplePage);
+
+    expect(widgets.onWidgetPage()).toBe(true);
+
+    jest.restoreAllMocks();
   });
 
   describe('the page', () => {
@@ -118,6 +156,17 @@ describe('the forum initializer', () => {
 
     it('adds no empty sidebar items when the start sections have no widgets', () => {
       register('end', 'end');
+
+      const sidebar = mq(IndexSidebar);
+
+      expect(sidebar).not.toHaveElement('.item-startTopWidgetSection');
+      expect(sidebar).not.toHaveElement('.item-startBottomWidgetSection');
+    });
+
+    it('adds no start sections on a page that does not show widgets', () => {
+      register('startTop', 'start_top');
+      register('startBottom', 'start_bottom');
+      app.current = new PageState(OtherPage, { routeName: 'tags' });
 
       const sidebar = mq(IndexSidebar);
 
