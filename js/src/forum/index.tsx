@@ -1,3 +1,4 @@
+import IndexPage from 'flarum/forum/components/IndexPage';
 import IndexSidebar from 'flarum/forum/components/IndexSidebar';
 import PageStructure from 'flarum/forum/components/PageStructure';
 import app from 'flarum/forum/app';
@@ -11,7 +12,7 @@ import StartBottomWidgetSection from './components/StartBottomWidgetSection';
 import TopWidgetSection from './components/TopWidgetSection';
 import BottomWidgetSection from './components/BottomWidgetSection';
 
-app.widgets = new WidgetManager();
+app.widgets = new WidgetManager().addPage(IndexPage);
 
 app.initializers.add('fof/forum-widgets-core', () => {
   app.widgets.setConfig((app.data.resources[0] as any)?.attributes['fof-forum-widgets-core.config']);
@@ -26,6 +27,8 @@ app.initializers.add('fof/forum-widgets-core', () => {
   });
 
   extend(IndexSidebar.prototype, 'items', (items: ItemList<any>) => {
+    if (!app.widgets.onWidgetPage()) return;
+
     if (app.widgets.get('start_top').length) {
       items.add('startTopWidgetSection', <StartTopWidgetSection />, 100);
     }

@@ -1,3 +1,4 @@
+import app from 'flarum/common/app';
 import { Widget } from '../common/extend/Widgets';
 
 export default class WidgetManager {
@@ -10,6 +11,29 @@ export default class WidgetManager {
   public states: any = {};
 
   private config: any = {};
+
+  /**
+   * The pages widgets show on, as page components or module paths. Pages
+   * that extend one of them show widgets too.
+   */
+  private pages: (Function | string)[] = [];
+
+  /**
+   * Show widgets on a page, given its component or its module path, such as
+   * `'ext:acme/example/forum/components/ExamplePage'`.
+   */
+  addPage(page: Function | string): this {
+    this.pages.push(page);
+
+    return this;
+  }
+
+  /**
+   * Whether the current page shows widgets.
+   */
+  onWidgetPage(): boolean {
+    return this.pages.some((page) => app.current.matches(page));
+  }
 
   add(widget: Widget, extension: any): void {
     widget.extension = extension;

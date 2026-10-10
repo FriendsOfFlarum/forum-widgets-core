@@ -4,6 +4,7 @@ import mq from 'mithril-query';
 import app from 'flarum/forum/app';
 import PageState from 'flarum/common/states/PageState';
 import IndexPage from 'flarum/forum/components/IndexPage';
+import Page from 'flarum/common/components/Page';
 import Component from 'flarum/common/Component';
 import WidgetManager from '../../../src/common/WidgetManager';
 import type { Placement } from '../../../src/common/extend/Widgets';
@@ -35,8 +36,17 @@ const widgetComponent = (key: string) =>
 const register = (placement: Placement, key: string, position: number) =>
   app.widgets.add({ key, placement, position, component: widgetComponent(key), isDisabled: false, isUnique: true }, 'acme-widgets');
 
-const onRoute = (routeName: string) => {
-  app.current = new PageState(IndexPage, { routeName });
+/** A page that is not a discussion list, such as a discussion or the tags page. */
+class OtherPage extends Page {}
+
+/** A page an extension builds on the discussion list. */
+class CustomListPage extends IndexPage {}
+
+/** A page that is not a discussion list, but that an extension shows widgets on. */
+class OptedInPage extends Page {}
+
+const onPage = (page: Function, routeName = 'test') => {
+  app.current = new PageState(page, { routeName });
 };
 
 const sections: [Placement, any, string][] = [
@@ -50,9 +60,10 @@ const sections: [Placement, any, string][] = [
 describe.each(sections)('the %s section', (placement, Section, selector) => {
   beforeEach(() => {
     app.widgets = new WidgetManager();
+    app.widgets.addPage(IndexPage);
     app.widgets.setConfig({});
     enableExtensions('acme-widgets');
-    onRoute('index');
+    onPage(IndexPage, 'index');
   });
 
   it('renders its widgets in position order on the discussion list', () => {
@@ -88,10 +99,35 @@ describe.each(sections)('the %s section', (placement, Section, selector) => {
     expect(mq(Section)).not.toHaveElement(selector);
   });
 
-  it.each(['discussion', 'user.posts', 'tags'])('renders nothing on the %s route', (routeName) => {
+  it.each(['index', 'tag', 'following'])('renders on the %s discussion list', (routeName) => {
     register(placement, 'first', 1);
-    onRoute(routeName);
+    onPage(IndexPage, routeName);
+
+    expect(mq(Section)).toHaveElement(selector);
+  });
+
+  it('renders on a page built on the discussion list', () => {
+    register(placement, 'first', 1);
+    onPage(CustomListPage);
+
+    expect(mq(Section)).toHaveElement(selector);
+  });
+
+  it.each(['discussion', 'user.posts', 'tags'])('renders nothing on the %s page', (routeName) => {
+    register(placement, 'first', 1);
+    onPage(OtherPage, routeName);
 
     expect(mq(Section)).not.toHaveElement(selector);
+  });
+
+  it('renders on a page an extension added', () => {
+    register(placement, 'first', 1);
+    onPage(OptedInPage);
+
+    expect(mq(Section)).not.toHaveElement(selector);
+
+    app.widgets.addPage(OptedInPage);
+
+    expect(mq(Section)).toHaveElement(selector);
   });
 });
