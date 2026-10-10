@@ -36,5 +36,6 @@ return [
 
             return is_array($config) ? $config : [];
         })
-        ->serializeToForum('fof-forum-widgets-core.preferDataWithInitialLoad', 'fof-forum-widgets-core.prefer_data_with_initial_load', 'boolval'),
+        ->serializeToForum('fof-forum-widgets-core.preferDataWithInitialLoad', 'fof-forum-widgets-core.prefer_data_with_initial_load', 'boolval')
+        ->default('fof-forum-widgets-core.prefer_data_with_initial_load', false),
 ];
