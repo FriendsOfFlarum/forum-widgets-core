@@ -155,6 +155,22 @@ describe('WidgetEditor', () => {
     expect(mount()).toHaveElement('input[type="checkbox"]');
   });
 
+  it('offers to reset its registered settings, as core extension pages do', () => {
+    const show = jest.spyOn(app.modal, 'show').mockImplementation(() => {});
+
+    mount().click('.Form-controls .Button--danger');
+
+    expect(show).toHaveBeenCalledWith(
+      expect.any(Function),
+      expect.objectContaining({
+        extensionId: CORE,
+        settings: [expect.objectContaining({ key: 'fof-forum-widgets-core.prefer_data_with_initial_load' })],
+      })
+    );
+
+    show.mockRestore();
+  });
+
   it('warns when the cache directory is not writable', () => {
     (app.data as any)[`${CORE}.cache_store_writable`] = false;
 

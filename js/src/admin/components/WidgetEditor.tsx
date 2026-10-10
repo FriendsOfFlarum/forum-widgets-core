@@ -36,7 +36,20 @@ export default class WidgetEditor extends ExtensionPage<WidgetEditorAttrs> {
           <Form>
             <div className="Form-group">{this.editor()}</div>
             {settings ? settings.map(this.buildSettingComponent.bind(this)) : null}
-            <div className="Form-group">{this.submitButton()}</div>
+            <div className="Form-group Form-controls">
+              {this.submitButton()}
+              {this.resetButton(
+                (settings || [])
+                  .filter((e): e is Exclude<typeof e, () => Mithril.Children> => typeof e !== 'function')
+                  .map((e) => ({ key: e.setting, label: e.label })),
+                app.translator.trans(
+                  'core.admin.extension.reset_settings.title_extension',
+                  { extensionTitle: this.extension.extra['flarum-extension'].title },
+                  true
+                ),
+                this.extension.id
+              )}
+            </div>
           </Form>
         </div>
       </div>
