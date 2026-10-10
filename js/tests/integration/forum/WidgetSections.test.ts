@@ -93,6 +93,22 @@ describe.each(sections)('the %s section', (placement, Section, selector) => {
     expect(section.find('.KeyWidget').map((node: any) => node.textContent)).toEqual(['mine']);
   });
 
+  it('skips a saved widget that its extension no longer registers', () => {
+    register(placement, 'kept', 1);
+    app.widgets.setConfig({
+      instances: [
+        { id: 'acme-widgets:renamed', extension: 'acme-widgets', key: 'renamed', placement, position: 0 },
+        { id: 'acme-widgets:kept', extension: 'acme-widgets', key: 'kept', placement, position: 1 },
+      ],
+    });
+
+    expect(
+      mq(Section)
+        .find('.KeyWidget')
+        .map((node: any) => node.textContent)
+    ).toEqual(['kept']);
+  });
+
   it('renders nothing when it has no widgets', () => {
     register(placement === 'end' ? 'top' : 'end', 'elsewhere', 1);
 

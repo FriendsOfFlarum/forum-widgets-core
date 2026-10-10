@@ -48,12 +48,15 @@ export default class WidgetManager {
 
   getWidgetInstances(): Widget[] {
     const disabled = this.config.disabled || [];
-    const widgets = (this.config.instances || []).map(
-      (widget: any): Widget => ({
-        ...(this.widgets.find((w: Widget) => w.id === widget.id) || {}),
-        ...widget,
-      })
-    );
+    // A saved widget its extension no longer registers (renamed or removed) has no component to render.
+    const widgets = (this.config.instances || [])
+      .filter((widget: any) => this.widgets.some((w: Widget) => w.id === widget.id))
+      .map(
+        (widget: any): Widget => ({
+          ...this.widgets.find((w: Widget) => w.id === widget.id)!,
+          ...widget,
+        })
+      );
 
     this.widgets.forEach((widget: Widget) => {
       const lookupWidget = widgets.find((w: any) => w.id === widget.id);
