@@ -15,7 +15,7 @@ import BottomWidgetSection from './components/BottomWidgetSection';
 app.widgets = new WidgetManager().addPage(IndexPage);
 
 app.initializers.add('fof/forum-widgets-core', () => {
-  app.widgets.setConfig((app.data.resources[0] as any)?.attributes['fof-forum-widgets-core.config']);
+  app.widgets.setConfig((app.data.resources[0] as any)?.attributes['fof-forum-widgets-core.config'] ?? {});
 
   extend(PageStructure.prototype, 'mainItems', function (items: ItemList<any>) {
     items.add('topWidgetSection', <TopWidgetSection />, 15);

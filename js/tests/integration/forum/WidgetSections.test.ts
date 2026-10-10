@@ -37,13 +37,21 @@ const register = (placement: Placement, key: string, position: number) =>
   app.widgets.add({ key, placement, position, component: widgetComponent(key), isDisabled: false, isUnique: true }, 'acme-widgets');
 
 /** A page that is not a discussion list, such as a discussion or the tags page. */
-class OtherPage extends Page {}
+class OtherPage extends Page {
+  view() {
+    return null;
+  }
+}
 
 /** A page an extension builds on the discussion list. */
 class CustomListPage extends IndexPage {}
 
 /** A page that is not a discussion list, but that an extension shows widgets on. */
-class OptedInPage extends Page {}
+class OptedInPage extends Page {
+  view() {
+    return null;
+  }
+}
 
 const onPage = (page: Function, routeName = 'test') => {
   app.current = new PageState(page, { routeName });
@@ -91,6 +99,22 @@ describe.each(sections)('the %s section', (placement, Section, selector) => {
     const section = mq(Section);
 
     expect(section.find('.KeyWidget').map((node: any) => node.textContent)).toEqual(['mine']);
+  });
+
+  it('skips a saved widget that its extension no longer registers', () => {
+    register(placement, 'kept', 1);
+    app.widgets.setConfig({
+      instances: [
+        { id: 'acme-widgets:renamed', extension: 'acme-widgets', key: 'renamed', placement, position: 0 },
+        { id: 'acme-widgets:kept', extension: 'acme-widgets', key: 'kept', placement, position: 1 },
+      ],
+    });
+
+    expect(
+      mq(Section)
+        .find('.KeyWidget')
+        .map((node: any) => node.textContent)
+    ).toEqual(['kept']);
   });
 
   it('renders nothing when it has no widgets', () => {

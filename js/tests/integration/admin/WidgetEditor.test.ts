@@ -105,6 +105,13 @@ describe('WidgetEditor', () => {
     expect(placed(editor, 'end')).toEqual([]);
   });
 
+  it('lays widgets out as registered when the saved layout is not valid JSON', () => {
+    register('news', 'top');
+    app.data.settings[CONFIG] = '{"instances": [';
+
+    expect(placed(mount(), 'top')).toEqual(['acme-widgets:news']);
+  });
+
   it('places widgets that are hidden on the forum, so the admin can still arrange them', () => {
     register('news', 'top', { isDisabled: true });
 
@@ -146,6 +153,22 @@ describe('WidgetEditor', () => {
 
   it('renders the registered settings below the editor', () => {
     expect(mount()).toHaveElement('input[type="checkbox"]');
+  });
+
+  it('offers to reset its registered settings, as core extension pages do', () => {
+    const show = jest.spyOn(app.modal, 'show').mockImplementation(() => {});
+
+    mount().click('.Form-controls .Button--danger');
+
+    expect(show).toHaveBeenCalledWith(
+      expect.any(Function),
+      expect.objectContaining({
+        extensionId: CORE,
+        settings: [expect.objectContaining({ key: 'fof-forum-widgets-core.prefer_data_with_initial_load' })],
+      })
+    );
+
+    show.mockRestore();
   });
 
   it('warns when the cache directory is not writable', () => {

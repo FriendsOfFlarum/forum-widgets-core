@@ -38,11 +38,11 @@ export default class Widget<T extends WidgetAttrs> extends Component<T> {
     return '';
   }
 
-  title(): string {
+  title(): Mithril.Children {
     return '';
   }
 
-  description(): string {
+  description(): Mithril.Children {
     return '';
   }
 

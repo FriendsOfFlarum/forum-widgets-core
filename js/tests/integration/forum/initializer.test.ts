@@ -23,7 +23,11 @@ class KeyWidget extends Component {
 }
 
 /** A page that is not a discussion list but still has the index sidebar, like the tags page. */
-class OtherPage extends Page {}
+class OtherPage extends Page {
+  view() {
+    return null;
+  }
+}
 
 const register = (key: string, placement: Placement) =>
   app.widgets.add({ key, placement, position: 0, component: KeyWidget, isDisabled: false, isUnique: true }, 'acme-widgets');
@@ -86,7 +90,11 @@ describe('the forum initializer', () => {
       return ExportRegistry.prototype.checkModule.call(this, namespace, id);
     });
 
-    class ExamplePage extends Page {}
+    class ExamplePage extends Page {
+      view() {
+        return null;
+      }
+    }
 
     const widgets = new WidgetManager().addPage('ext:acme/example/forum/components/ExamplePage');
     app.current = new PageState(ExamplePage, { routeName: 'example' });
