@@ -37,13 +37,21 @@ const register = (placement: Placement, key: string, position: number) =>
   app.widgets.add({ key, placement, position, component: widgetComponent(key), isDisabled: false, isUnique: true }, 'acme-widgets');
 
 /** A page that is not a discussion list, such as a discussion or the tags page. */
-class OtherPage extends Page {}
+class OtherPage extends Page {
+  view() {
+    return null;
+  }
+}
 
 /** A page an extension builds on the discussion list. */
 class CustomListPage extends IndexPage {}
 
 /** A page that is not a discussion list, but that an extension shows widgets on. */
-class OptedInPage extends Page {}
+class OptedInPage extends Page {
+  view() {
+    return null;
+  }
+}
 
 const onPage = (page: Function, routeName = 'test') => {
   app.current = new PageState(page, { routeName });
