@@ -108,6 +108,15 @@ describe('the forum initializer', () => {
     jest.restoreAllMocks();
   });
 
+  it('mounts the floating dock once, on its own root on the body', () => {
+    expect(document.querySelectorAll('body > #fof-forum-widgets-floating')).toHaveLength(1);
+
+    // Running the initializer again (another app instance, a hot reload) adds no second dock.
+    app.initializers.get('fof/forum-widgets-core')(app);
+
+    expect(document.querySelectorAll('#fof-forum-widgets-floating')).toHaveLength(1);
+  });
+
   describe('the page', () => {
     beforeEach(() => {
       app.widgets.widgets = [];
