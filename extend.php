@@ -32,7 +32,10 @@ return [
 
     (new Extend\Settings())
         ->serializeToForum('fof-forum-widgets-core.config', 'fof-forum-widgets-core.config', function (?string $value): array {
-            return $value ? json_decode($value, true) : [];
+            $config = $value ? json_decode($value, true) : null;
+
+            return is_array($config) ? $config : [];
         })
-        ->serializeToForum('fof-forum-widgets-core.preferDataWithInitialLoad', 'fof-forum-widgets-core.prefer_data_with_initial_load', 'boolval'),
+        ->serializeToForum('fof-forum-widgets-core.preferDataWithInitialLoad', 'fof-forum-widgets-core.prefer_data_with_initial_load', 'boolval')
+        ->default('fof-forum-widgets-core.prefer_data_with_initial_load', false),
 ];

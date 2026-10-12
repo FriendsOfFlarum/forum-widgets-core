@@ -1,3 +1,4 @@
+import app from 'flarum/common/app';
 import { Widget } from '../common/extend/Widgets';
 
 export default class WidgetManager {
@@ -10,6 +11,29 @@ export default class WidgetManager {
   public states: any = {};
 
   private config: any = {};
+
+  /**
+   * The pages widgets show on, as page components or module paths. Pages
+   * that extend one of them show widgets too.
+   */
+  private pages: (Function | string)[] = [];
+
+  /**
+   * Show widgets on a page, given its component or its module path, such as
+   * `'ext:acme/example/forum/components/ExamplePage'`.
+   */
+  addPage(page: Function | string): this {
+    this.pages.push(page);
+
+    return this;
+  }
+
+  /**
+   * Whether the current page shows widgets.
+   */
+  onWidgetPage(): boolean {
+    return this.pages.some((page) => app.current.matches(page));
+  }
 
   add(widget: Widget, extension: any): void {
     widget.extension = extension;
@@ -24,12 +48,15 @@ export default class WidgetManager {
 
   getWidgetInstances(): Widget[] {
     const disabled = this.config.disabled || [];
-    const widgets = (this.config.instances || []).map(
-      (widget: any): Widget => ({
-        ...(this.widgets.find((w: Widget) => w.id === widget.id) || {}),
-        ...widget,
-      })
-    );
+    // A saved widget its extension no longer registers (renamed or removed) has no component to render.
+    const widgets = (this.config.instances || [])
+      .filter((widget: any) => this.widgets.some((w: Widget) => w.id === widget.id))
+      .map(
+        (widget: any): Widget => ({
+          ...this.widgets.find((w: Widget) => w.id === widget.id)!,
+          ...widget,
+        })
+      );
 
     this.widgets.forEach((widget: Widget) => {
       const lookupWidget = widgets.find((w: any) => w.id === widget.id);

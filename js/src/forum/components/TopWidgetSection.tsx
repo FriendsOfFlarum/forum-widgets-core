@@ -16,7 +16,7 @@ export default class TopWidgetSection extends Component {
   }
 
   view(): Mithril.Children {
-    if ((app.current.data as any).routeName !== 'index') return null;
+    if (!app.widgets.onWidgetPage()) return null;
     if (!app.widgets.get('top').length) return null;
 
     const isSmallScreen = ['phone', 'tablet'].includes(app.screen());
@@ -28,15 +28,17 @@ export default class TopWidgetSection extends Component {
             'FofWidgets-topWidgetSection FofWidgets-WidgetSection': true,
             'FofWidgets-WidgetSection--endScroll': isSmallScreen && this.scrollEnd(),
           })}
-          onscroll={(e: Event) => {
-            if (isSmallScreen) {
-              this.scrollEnd(false);
+          onscroll={(e: Event & { redraw?: boolean }) => {
+            const target = e.target as HTMLElement;
+            const scrollEnd = isSmallScreen && target.offsetWidth + target.scrollLeft >= target.scrollWidth;
 
-              const target = e.target as HTMLElement;
-              if (target.offsetWidth + target.scrollLeft >= target.scrollWidth) {
-                this.scrollEnd(true);
-              }
+            // Scroll fires continuously; only redraw when the edge fade has to change.
+            if (scrollEnd === this.scrollEnd()) {
+              e.redraw = false;
+              return;
             }
+
+            this.scrollEnd(scrollEnd);
           }}
         >
           {sortWidgets(app.widgets.get('top')).map((widget) => widget.component.component({ state: widget.state }))}
