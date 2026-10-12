@@ -18,9 +18,17 @@ const LOCK_CLASS = 'FofWidgets-floatingLock';
  * `forum/index` mounts it on its own root on the document body so it is present
  * everywhere and its open/closed state (and each widget's loaded content)
  * survives SPA navigation instead of remounting on every page change.
+ *
+ * The widgets are rendered the first time the dock opens, not before, so
+ * visitors who never open it load none of them. After that the panel stays in
+ * the page, hidden while closed, so reopening it shows the same widgets with
+ * their content intact instead of mounting them again.
  */
 export default class FloatingWidgetSection extends Component {
   open: boolean = false;
+
+  // Whether the dock has been opened at least once (see the class comment).
+  opened: boolean = false;
 
   // The launcher button. Held directly rather than found through this.element:
   // the dock usually mounts before any widget registers, so its first render is
@@ -50,6 +58,7 @@ export default class FloatingWidgetSection extends Component {
 
   setOpen(open: boolean): void {
     this.open = open;
+    if (open) this.opened = true;
     // On phones the panel is a full-screen takeover, so lock the background
     // scroll while it is open. The class goes on the scrolling element (<html>)
     // and the rule is scoped to the phone breakpoint, so this is a no-op on
@@ -70,12 +79,15 @@ export default class FloatingWidgetSection extends Component {
           'FofWidgets-floatingWidgetSection--open': this.open,
         })}
       >
-        {this.open ? (
+        {this.opened ? (
           <div
             className="FofWidgets-floatingWidgetSection-panel"
             role="dialog"
             // Full screen on phones, where it covers the page; a corner overlay elsewhere.
             aria-modal={app.screen() === 'phone' ? 'true' : 'false'}
+            // Closed: kept in the page but hidden, which also takes it out of the
+            // tab order and away from screen readers.
+            hidden={!this.open}
           >
             <div className="FofWidgets-floatingWidgetSection-panelBody">
               {sortWidgets(widgets).map((widget) => widget.component.component({ state: widget.state }))}

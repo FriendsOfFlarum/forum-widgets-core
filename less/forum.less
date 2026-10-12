@@ -134,6 +134,13 @@
 
   &-panel {
     position: relative;
+
+    // Hidden while closed (see FloatingWidgetSection). Spelled out so no theme
+    // rule that sets a display value on the panel can bring it back.
+    &[hidden] {
+      display: none !important;
+    }
+
     width: 320px;
     max-width: ~"calc(100vw - 40px)";
     max-height: ~"calc(100vh - 120px)";

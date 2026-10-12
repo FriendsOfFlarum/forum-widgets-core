@@ -43,6 +43,7 @@ class OtherPage extends Page {
 const LOCK_CLASS = 'FofWidgets-floatingLock';
 const toggle = '.FofWidgets-floatingWidgetSection-toggle';
 const panel = '.FofWidgets-floatingWidgetSection-panel';
+const openPanel = '.FofWidgets-floatingWidgetSection-panel:not([hidden])';
 
 const pressEscape = () => document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
 
@@ -81,14 +82,53 @@ describe('the floating section', () => {
 
     dock.click(toggle);
 
-    expect(dock).toHaveElement(`${panel}[role="dialog"]`);
+    expect(dock).toHaveElement(`${openPanel}[role="dialog"]`);
     expect(dock.first(toggle).getAttribute('aria-expanded')).toBe('true');
     expect(dock.find('.KeyWidget').map((node: any) => node.textContent)).toEqual(['first', 'second']);
 
     dock.click(toggle);
 
-    expect(dock).not.toHaveElement(panel);
+    expect(dock).toHaveElement(`${panel}[hidden]`);
     expect(dock.first(toggle).getAttribute('aria-expanded')).toBe('false');
+  });
+
+  it('renders no widgets until it is first opened', () => {
+    register('floating', 'first', 1);
+
+    const dock = mq(FloatingWidgetSection);
+
+    expect(dock).not.toHaveElement('.KeyWidget');
+    expect(app.widgets.states['acme-widgets:first']).toEqual({});
+  });
+
+  it('keeps its widgets mounted, hidden, after closing, so reopening does not mount them again', () => {
+    let mounts = 0;
+    class CountingWidget extends Component<{ state: any }> {
+      oninit(vnode: any) {
+        super.oninit(vnode);
+        mounts++;
+      }
+
+      view() {
+        return m('.CountingWidget');
+      }
+    }
+    app.widgets.add(
+      { key: 'counting', placement: 'floating', position: 0, component: CountingWidget, isDisabled: false, isUnique: true },
+      'acme-widgets'
+    );
+
+    const dock = mq(FloatingWidgetSection);
+
+    dock.click(toggle);
+    dock.click(toggle);
+
+    expect(dock).toHaveElement(`${panel}[hidden] .CountingWidget`);
+
+    dock.click(toggle);
+
+    expect(dock).toHaveElement(`${openPanel} .CountingWidget`);
+    expect(mounts).toBe(1);
   });
 
   it('hands each widget its persistent state', () => {
@@ -147,7 +187,7 @@ describe('the floating section', () => {
     pressEscape();
     m.redraw.sync();
 
-    expect(root.querySelector(panel)).toBeNull();
+    expect(root.querySelector(panel)?.hasAttribute('hidden')).toBe(true);
     expect(document.documentElement.classList.contains(LOCK_CLASS)).toBe(false);
     expect(document.activeElement).toBe(root.querySelector(toggle));
 
@@ -171,7 +211,7 @@ describe('the floating section', () => {
     pressEscape();
     m.redraw.sync();
 
-    expect(root.querySelector(panel)).toBeNull();
+    expect(root.querySelector(panel)?.hasAttribute('hidden')).toBe(true);
     expect(document.activeElement).toBe(root.querySelector(toggle));
 
     m.mount(root, null);
