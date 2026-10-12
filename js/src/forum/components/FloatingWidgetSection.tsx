@@ -22,8 +22,28 @@ const LOCK_CLASS = 'FofWidgets-floatingLock';
 export default class FloatingWidgetSection extends Component {
   open: boolean = false;
 
+  // The launcher button. Held directly rather than found through this.element:
+  // the dock usually mounts before any widget registers, so its first render is
+  // empty and this.element is never set.
+  toggleButton?: HTMLElement;
+
+  // Escape closes the dock and hands focus back to the launcher button.
+  onkeydown = (e: KeyboardEvent): void => {
+    if (e.key !== 'Escape' || !this.open) return;
+
+    this.setOpen(false);
+    m.redraw();
+    this.toggleButton?.focus();
+  };
+
+  oncreate(vnode: Mithril.VnodeDOM<{}, this>): void {
+    super.oncreate(vnode);
+    document.addEventListener('keydown', this.onkeydown);
+  }
+
   onremove(vnode: Mithril.VnodeDOM<{}, this>): void {
     super.onremove(vnode);
+    document.removeEventListener('keydown', this.onkeydown);
     // Never leave the scroll lock behind if the dock is torn down while open.
     document.documentElement.classList.remove(LOCK_CLASS);
   }
@@ -51,7 +71,12 @@ export default class FloatingWidgetSection extends Component {
         })}
       >
         {this.open ? (
-          <div className="FofWidgets-floatingWidgetSection-panel" role="dialog" aria-modal="false">
+          <div
+            className="FofWidgets-floatingWidgetSection-panel"
+            role="dialog"
+            // Full screen on phones, where it covers the page; a corner overlay elsewhere.
+            aria-modal={app.screen() === 'phone' ? 'true' : 'false'}
+          >
             <div className="FofWidgets-floatingWidgetSection-panelBody">
               {sortWidgets(widgets).map((widget) => widget.component.component({ state: widget.state }))}
             </div>
@@ -62,6 +87,7 @@ export default class FloatingWidgetSection extends Component {
           className="Button FofWidgets-floatingWidgetSection-toggle"
           aria-expanded={this.open ? 'true' : 'false'}
           aria-label={app.translator.trans(`fof-forum-widgets-core.forum.floating.${this.open ? 'close' : 'open'}`)}
+          oncreate={(vnode: Mithril.VnodeDOM) => (this.toggleButton = vnode.dom as HTMLElement)}
           onclick={() => this.setOpen(!this.open)}
         >
           <Icon name={this.open ? 'fas fa-chevron-down' : 'fas fa-layer-group'} />
