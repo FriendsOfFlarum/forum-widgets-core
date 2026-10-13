@@ -50,6 +50,9 @@ beforeAll(() => {
   extend.forEach((extender: any) => extender.extend(app, { name: CORE, exports: {} }));
   app.boot();
 
+  // As locale/en.yml has it; the fake app loads no locale files.
+  app.translator.addTranslations({ 'fof-forum-widgets-core.admin.widget_tooltip': '{widget} — {extension}' });
+
   // The decorative placeholder bars set a CSS custom property, which the fake DOM mithril-query uses cannot parse.
   jest.spyOn(WidgetEditor.prototype, 'makePlaceholders').mockReturnValue([]);
 });
@@ -132,6 +135,126 @@ describe('WidgetEditor', () => {
 
     expect(editor.first('ol[data-section="top"] .FoF-ForumWidgets-Widget-title').textContent).toBe('Acme Widgets');
     expect(storeTile(editor, 'acme-widgets:news').textContent).toBe('Acme Widgets');
+  });
+
+  it('labels a widget with its own title and icon when it gives them, in the layout and in the store', () => {
+    register('news', 'top', { title: 'Latest news', icon: 'fas fa-newspaper' });
+
+    const editor = mount();
+    const tile = editor.first('ol[data-section="top"] .FoF-ForumWidgets-Widget');
+
+    expect(tile.querySelector('.FoF-ForumWidgets-Widget-title').textContent).toBe('Latest news');
+    expect(tile.querySelector('.FoF-ForumWidgets-Widget-icon i').className).toContain('fa-newspaper');
+    // The full label and where it comes from are on hover, as a cut-short tile needs.
+    expect(tile.getAttribute('title')).toBe('Latest news — Acme Widgets');
+    expect(storeTile(editor, 'acme-widgets:news').textContent).toBe('Latest news');
+    expect(storeTile(editor, 'acme-widgets:news').querySelector('.FoF-ForumWidgets-Widget-icon i').className).toContain('fa-newspaper');
+  });
+
+  it('accepts a translated label, which is an array rather than a string', () => {
+    register('news', 'top', { title: ['Latest', ' news'] });
+
+    const tile = mount().first('ol[data-section="top"] .FoF-ForumWidgets-Widget');
+
+    expect(tile.querySelector('.FoF-ForumWidgets-Widget-title').textContent).toBe('Latest news');
+    expect(tile.getAttribute('title')).toBe('Latest news — Acme Widgets');
+  });
+
+  it('tells apart several widgets from one extension', () => {
+    register('news', 'end', { title: 'Latest news' });
+    register('stats', 'end', { title: 'Statistics' });
+
+    const titles = mount()
+      .find('ol[data-section="end"] .FoF-ForumWidgets-Widget-title')
+      .map((el: HTMLElement) => el.textContent);
+
+    expect(titles).toEqual(['Latest news', 'Statistics']);
+  });
+
+  it("keeps a widget's own label when it is placed from a saved layout", () => {
+    register('news', 'top', { title: 'Latest news' });
+    app.data.settings[CONFIG] = JSON.stringify({
+      instances: [{ id: 'acme-widgets:news', extension: 'acme-widgets', key: 'news', placement: 'bottom', position: 0 }],
+    });
+
+    expect(mount().first('ol[data-section="bottom"] .FoF-ForumWidgets-Widget-title').textContent).toBe('Latest news');
+  });
+
+  it("falls back to the extension's icon and title for a widget that gives neither", () => {
+    register('news', 'top');
+
+    const tile = mount().first('ol[data-section="top"] .FoF-ForumWidgets-Widget');
+
+    expect(tile.querySelector('.FoF-ForumWidgets-Widget-icon i').className).toContain('fa-cube');
+    expect(tile.querySelector('.FoF-ForumWidgets-Widget-title').textContent).toBe('Acme Widgets');
+    expect(tile.getAttribute('title')).toBe('Acme Widgets');
+  });
+
+  /** Run `test` with the acme extension's icon swapped out, then put the original back. */
+  const withExtensionIcon = (icon: any, test: () => void) => {
+    const ext = app.data.extensions['acme-widgets'] as any;
+    const original = ext.icon;
+    ext.icon = icon;
+    try {
+      test();
+    } finally {
+      ext.icon = original;
+    }
+  };
+
+  it("shows a widget's own icon when its extension has none", () => {
+    withExtensionIcon(undefined, () => {
+      register('news', 'top', { icon: 'fas fa-newspaper' });
+
+      expect(mount().first('ol[data-section="top"] .FoF-ForumWidgets-Widget-icon i').className).toContain('fa-newspaper');
+    });
+  });
+
+  it("replaces an extension's image icon with the widget's own, rather than drawing over it", () => {
+    withExtensionIcon({ backgroundImage: "url('acme.png')", backgroundColor: '#123456' }, () => {
+      register('news', 'top', { icon: 'fas fa-newspaper' });
+      register('stats', 'end');
+
+      const editor = mount();
+      const own = editor.first('ol[data-section="top"] .FoF-ForumWidgets-Widget-icon') as HTMLElement;
+      const inherited = editor.first('ol[data-section="end"] .FoF-ForumWidgets-Widget-icon') as HTMLElement;
+
+      expect(own.style.backgroundImage).toBe('');
+      expect(own.style.backgroundColor).not.toBe('');
+      expect(own.querySelector('i')!.className).toContain('fa-newspaper');
+      // A widget without its own icon keeps the extension's image, as before.
+      expect(inherited.style.backgroundImage).toContain('acme.png');
+      expect(inherited.querySelector('i')).toBeFalsy();
+    });
+  });
+
+  it('calls a label given as a callback, so an admin translation key works', () => {
+    app.translator.addTranslations({ 'acme-widgets.admin.news_widget': 'Translated news' });
+    register('news', 'top', { title: () => app.translator.trans('acme-widgets.admin.news_widget') });
+
+    const tile = mount().first('ol[data-section="top"] .FoF-ForumWidgets-Widget');
+
+    expect(tile.querySelector('.FoF-ForumWidgets-Widget-title').textContent).toBe('Translated news');
+    expect(tile.getAttribute('title')).toBe('Translated news — Acme Widgets');
+  });
+
+  it("falls back to the extension's title for an empty label", () => {
+    register('news', 'top', { title: [] });
+    register('stats', 'end', { title: () => '  ' });
+
+    const editor = mount();
+
+    for (const section of ['top', 'end']) {
+      const tile = editor.first(`ol[data-section="${section}"] .FoF-ForumWidgets-Widget`);
+      expect(tile.querySelector('.FoF-ForumWidgets-Widget-title').textContent).toBe('Acme Widgets');
+      expect(tile.getAttribute('title')).toBe('Acme Widgets');
+    }
+  });
+
+  it('keeps the extension title on hover for a widget that gives only an icon', () => {
+    register('news', 'top', { icon: 'fas fa-newspaper' });
+
+    expect(mount().first('ol[data-section="top"] .FoF-ForumWidgets-Widget').getAttribute('title')).toBe('Acme Widgets');
   });
 
   it('lets a unique widget be taken from the store only while it is out of the layout', () => {
