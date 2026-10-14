@@ -1,4 +1,4 @@
-import WidgetManager from './common/WidgetManager';
+import type WidgetManager from '../common/WidgetManager';
 
 declare module 'flarum/common/Application' {
   export default interface Application {
