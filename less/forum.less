@@ -4,17 +4,19 @@
   }
 }
 
-.item-startTopWidgetSection, .item-startBottomWidgetSection  {
-  @media @tablet {
-    display: block !important;
+.FofWidgets-startTop, .FofWidgets-startBottom {
+  @media @phone, @tablet {
+    margin-top: 15px;
+  }
+}
+
+@media @desktop-up {
+  .FofWidgets-startTop {
+    margin-bottom: 20px;
   }
 
-  @media @phone {
-    margin-top: 16px;
-  }
-
-  &:empty {
-    display: none !important;
+  .FofWidgets-startBottom {
+    margin-top: 20px;
   }
 }
 

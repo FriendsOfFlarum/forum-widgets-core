@@ -1,5 +1,4 @@
 import IndexPage from 'flarum/forum/components/IndexPage';
-import IndexSidebar from 'flarum/forum/components/IndexSidebar';
 import PageStructure from 'flarum/forum/components/PageStructure';
 import app from 'flarum/forum/app';
 import { extend } from 'flarum/common/extend';
@@ -26,15 +25,11 @@ app.initializers.add('fof/forum-widgets-core', () => {
     items.add('endWidgetSection', <EndWidgetSection />, 1);
   });
 
-  extend(IndexSidebar.prototype, 'items', (items: ItemList<any>) => {
-    if (!app.widgets.onWidgetPage()) return;
-
-    if (app.widgets.get('start_top').length) {
-      items.add('startTopWidgetSection', <StartTopWidgetSection />, 100);
-    }
-    if (app.widgets.get('start_bottom').length) {
-      items.add('startBottomWidgetSection', <StartBottomWidgetSection />, -100);
-    }
+  // Beside the page's sidebar (the index nav), not inside its list: on phones core moves that
+  // list's header controls into the header, and with more than one of them the list itself.
+  extend(PageStructure.prototype, 'sidebarItems', function (items: ItemList<any>) {
+    items.add('startTopWidgetSection', <StartTopWidgetSection />, 110);
+    items.add('startBottomWidgetSection', <StartBottomWidgetSection />, 90);
   });
 });
 
