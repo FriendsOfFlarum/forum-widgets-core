@@ -146,40 +146,40 @@ describe('the forum initializer', () => {
       app.widgets.setConfig({});
     });
 
-    it('adds the start sections around the navigation when they have widgets', () => {
+    const page = () => mq(PageStructure, { className: 'IndexPage', sidebar: () => m(IndexSidebar) }, m('p', 'discussion list'));
+
+    it('puts the start sections around the navigation, outside its list', () => {
       register('startTop', 'start_top');
       register('startBottom', 'start_bottom');
 
-      const sidebar = mq(IndexSidebar);
+      const structure = page();
 
-      expect(sidebar).toHaveElement('.item-startTopWidgetSection .FofWidgets-startTop');
-      expect(sidebar).toHaveElement('.item-startBottomWidgetSection .FofWidgets-startBottom');
-
-      const items = (sidebar.first('ul') as any).children as HTMLElement[];
-      const keys = Array.from(items).map((el) => el.className);
-
-      expect(keys[0]).toContain('item-startTopWidgetSection');
-      expect(keys[keys.length - 1]).toContain('item-startBottomWidgetSection');
+      // On phones core lifts the nav list's header controls out of the page, and with two
+      // of them (a tag's follow button) the whole list goes too, so nothing else may live in it.
+      expect(childClasses(structure, '.Page-sidebar')).toEqual([
+        'FofWidgets-startTop FofWidgets-WidgetSection',
+        'IndexPage-nav sideNav',
+        'FofWidgets-startBottom FofWidgets-WidgetSection',
+      ]);
+      expect(structure).not.toHaveElement('.sideNav .FofWidgets-WidgetSection');
     });
 
-    it('adds no empty sidebar items when the start sections have no widgets', () => {
+    it('renders no start sections when they have no widgets', () => {
       register('end', 'end');
 
-      const sidebar = mq(IndexSidebar);
+      const structure = page();
 
-      expect(sidebar).not.toHaveElement('.item-startTopWidgetSection');
-      expect(sidebar).not.toHaveElement('.item-startBottomWidgetSection');
+      expect(childClasses(structure, '.Page-sidebar')).toEqual(['IndexPage-nav sideNav']);
     });
 
-    it('adds no start sections on a page that does not show widgets', () => {
+    it('renders no start sections on a page that does not show widgets', () => {
       register('startTop', 'start_top');
       register('startBottom', 'start_bottom');
       app.current = new PageState(OtherPage, { routeName: 'tags' });
 
-      const sidebar = mq(IndexSidebar);
+      const structure = page();
 
-      expect(sidebar).not.toHaveElement('.item-startTopWidgetSection');
-      expect(sidebar).not.toHaveElement('.item-startBottomWidgetSection');
+      expect(childClasses(structure, '.Page-sidebar')).toEqual(['IndexPage-nav sideNav']);
     });
   });
 });
