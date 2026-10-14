@@ -8,6 +8,7 @@ import Icon from 'flarum/common/components/Icon';
 import sortWidgets from '../../common/utils/sortWidgets';
 import type { Widget } from '../../common/extend/Widgets';
 import Alert from 'flarum/common/components/Alert';
+import extractText from 'flarum/common/utils/extractText';
 
 interface WidgetEditorAttrs extends ExtensionPageAttrs {}
 
@@ -197,14 +198,31 @@ export default class WidgetEditor extends ExtensionPage<WidgetEditorAttrs> {
 
   widget(widget: Widget, placed: boolean = false): Mithril.Children {
     const extension = app.data.extensions[widget.extension!];
+    const extensionTitle = extension.extra['flarum-extension'].title;
+
+    // A widget's own label and icon, when it gives them, tell apart several
+    // widgets from one extension. The store's tiles are narrow enough to cut a
+    // label short, so the full label — and, for a widget's own label, the
+    // extension it comes from — is on hover.
+    const ownTitle = typeof widget.title === 'function' ? widget.title() : widget.title;
+    const ownTitleText = ownTitle == null ? '' : extractText(ownTitle).trim();
+    const hover = ownTitleText
+      ? extractText(app.translator.trans('fof-forum-widgets-core.admin.widget_tooltip', { widget: ownTitleText, extension: extensionTitle }))
+      : extensionTitle;
+
+    // The extension's colours stay; an extension whose icon is an IMAGE has no
+    // glyph to swap, so a widget's own icon replaces the image instead of
+    // being drawn over it.
+    const iconName = widget.icon || extension.icon?.name;
+    const iconStyle = widget.icon && extension.icon?.backgroundImage ? { ...extension.icon, backgroundImage: undefined } : extension.icon;
 
     return (
       <div className="FoF-ForumWidgets-Widget-container">
-        <div className="FoF-ForumWidgets-Widget">
-          <span className="FoF-ForumWidgets-Widget-icon ExtensionIcon" style={extension.icon}>
-            {extension.icon ? <Icon name={extension.icon.name} /> : ''}
+        <div className="FoF-ForumWidgets-Widget" title={hover}>
+          <span className="FoF-ForumWidgets-Widget-icon ExtensionIcon" style={iconStyle}>
+            {iconName ? <Icon name={iconName} /> : ''}
           </span>
-          <span className="FoF-ForumWidgets-Widget-title">{extension.extra['flarum-extension'].title}</span>
+          <span className="FoF-ForumWidgets-Widget-title">{ownTitleText ? ownTitle : extensionTitle}</span>
         </div>
       </div>
     );

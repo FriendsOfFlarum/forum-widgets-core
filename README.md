@@ -95,6 +95,13 @@ export default function (app) {
       // Default values, overridable by the admin.
       placement: 'end',
       position: 1,
+      // Optional: the widget's label and icon in the admin layout editor.
+      // Without them the tile shows your extension's title and icon, which
+      // cannot tell apart several widgets from one extension. Pass a callback:
+      // only the editor calls it, so an admin translation key is fine even
+      // though this registration runs on the forum too.
+      title: () => app.translator.trans('my-extension.admin.widget_title'),
+      icon: 'fas fa-chart-line',
     })
     .extend(app, 'my-extension-id');
 }
